@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Heavy Duty — Mentzer Tracker</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,7 +25,7 @@
     --work: #d4ff3a;
     --heavy: #ff4d2e;
   }
-  * { -webkit-font-smoothing: antialiased; }
+  * { -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
   body {
     font-family: 'Archivo', sans-serif;
     background: var(--bg);
@@ -45,12 +45,21 @@
   }
   .font-mono { font-family: 'JetBrains Mono', monospace; }
   .font-condensed { font-family: 'Archivo', sans-serif; font-stretch: 75%; }
+  
+  /* Prevenir zoom en iOS */
+  @media screen and (max-width: 767px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+  
   .set-input {
     background: transparent;
     border: 1px solid var(--border);
     color: var(--fg);
     font-family: 'JetBrains Mono', monospace;
     transition: all 0.15s ease;
+    font-size: 14px;
   }
   .set-input:focus {
     outline: none;
@@ -61,6 +70,7 @@
     border-color: var(--heavy);
     box-shadow: 0 0 0 3px rgba(255, 77, 46, 0.1);
   }
+  
   .btn-primary {
     background: var(--accent);
     color: #0a0a0b;
@@ -74,50 +84,50 @@
     transform: translateY(-1px);
   }
   .btn-primary:active { transform: translateY(0); }
+  
   .btn-ghost {
     border: 1px solid var(--border);
     color: var(--fg);
     transition: all 0.15s ease;
+    background: transparent;
   }
   .btn-ghost:hover {
     border-color: var(--border-light);
     background: var(--bg-elevated);
   }
-  .btn-danger {
-    border: 1px solid rgba(255, 77, 46, 0.3);
-    color: var(--danger);
-    transition: all 0.15s ease;
-  }
-  .btn-danger:hover {
-    background: rgba(255, 77, 46, 0.08);
-    border-color: var(--danger);
-  }
+  
   .set-row {
     position: relative;
     transition: background 0.2s ease;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
   }
+  .set-row:last-child { border-bottom: none; }
   .set-row.warmup { border-left: 2px solid var(--warmup); }
   .set-row.work { border-left: 2px solid var(--work); }
   .set-row.heavy { border-left: 2px solid var(--heavy); }
   .set-row.completed { background: rgba(255,255,255,0.025); }
+  
   @keyframes slideUp {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
   .animate-slide-up { animation: slideUp 0.3s ease-out; }
+  
   @keyframes slideInRight {
     from { transform: translateX(120%); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
   }
-  @keyframes pulsePR {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(212, 255, 58, 0.5); }
-    50% { box-shadow: 0 0 0 10px rgba(212, 255, 58, 0); }
-  }
-  .pulse-pr { animation: pulsePR 1.5s ease-out 2; }
+  
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
+  
   .nav-item {
     position: relative;
     transition: all 0.15s ease;
@@ -133,6 +143,7 @@
     width: 2px; height: 60%;
     background: var(--accent);
   }
+  
   .tag {
     display: inline-flex; align-items: center; gap: 4px;
     padding: 2px 6px;
@@ -140,10 +151,11 @@
     letter-spacing: 0.08em; text-transform: uppercase;
     font-family: 'JetBrains Mono', monospace;
   }
+  
   .check-set {
-    width: 20px; height: 20px;
+    width: 24px; height: 24px;
     border: 1px solid var(--border-light);
-    border-radius: 3px;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.15s ease;
     display: flex; align-items: center; justify-content: center;
@@ -155,14 +167,17 @@
   .check-set.checked.warmup { background: var(--warmup); border-color: var(--warmup); }
   .check-set svg { opacity: 0; color: #0a0a0b; transition: opacity 0.15s; }
   .check-set.checked svg { opacity: 1; }
+  
   input[type=number]::-webkit-inner-spin-button,
   input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
   input[type=number] { -moz-appearance: textfield; }
+  
   .view { animation: fadeIn 0.25s ease-out; }
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(4px); }
     to { opacity: 1; transform: translateY(0); }
   }
+  
   .exercise-pick {
     transition: all 0.15s ease;
     cursor: pointer;
@@ -172,10 +187,13 @@
     border-color: var(--accent);
     transform: translateY(-1px);
   }
+  
   .modal-overlay {
     background: rgba(0,0,0,0.75);
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
+  
   .big-num {
     font-family: 'Archivo', sans-serif;
     font-weight: 800;
@@ -183,6 +201,7 @@
     letter-spacing: -0.03em;
     line-height: 0.9;
   }
+  
   .progress-bar {
     height: 2px;
     background: var(--border);
@@ -194,19 +213,24 @@
     background: var(--accent);
     transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
+  
   .chart-dot { transition: all 0.15s ease; cursor: pointer; }
   .chart-dot:hover { r: 6; }
+  
   .toast {
     animation: slideInRight 0.3s ease-out;
   }
+  
   .exercise-card {
     transition: all 0.2s ease;
   }
   .exercise-card:hover { border-color: var(--border-light); }
+  
   .suggestion-box {
     background: linear-gradient(135deg, rgba(212, 255, 58, 0.06), transparent);
     border: 1px dashed rgba(212, 255, 58, 0.3);
   }
+  
   .failure-indicator {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 4px 8px;
@@ -230,24 +254,28 @@
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
   }
-  .ring-stat {
-    transform: rotate(-90deg);
+  
+  /* Mobile */
+  .mobile-nav { display: none; }
+  .main-content { 
+    padding-bottom: 100px; /* Space for bottom nav */
   }
-  .ring-stat circle {
-    transition: stroke-dashoffset 0.5s ease;
-  }
-  /* Mobile bottom nav */
   @media (max-width: 768px) {
     .sidebar { display: none; }
-    .mobile-nav { display: flex !important; }
-    .main-content { padding-bottom: 80px; }
+    .mobile-nav { display: flex; }
   }
-  .mobile-nav { display: none; }
   
   details > summary { list-style: none; cursor: pointer; }
   details > summary::-webkit-details-marker { display: none; }
   details[open] .chevron { transform: rotate(180deg); }
   .chevron { transition: transform 0.2s ease; }
+  
+  /* Safe areas for iOS notch */
+  @supports (padding: env(safe-area-inset-bottom)) {
+    .mobile-nav {
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+  }
 </style>
 </head>
 <body class="min-h-screen relative">
@@ -255,7 +283,7 @@
 <div class="flex min-h-screen relative z-10">
   
   <!-- SIDEBAR -->
-  <aside class="sidebar w-60 border-r border-[var(--border)] flex flex-col p-5 sticky top-0 h-screen flex-shrink-0">
+  <aside class="sidebar w-60 border-r border-[var(--border)] flex-col p-5 sticky top-0 h-screen flex-shrink-0 hidden md:flex">
     <div class="mb-10">
       <div class="flex items-center gap-2.5">
         <div class="w-9 h-9 bg-[var(--accent)] flex items-center justify-center">
@@ -295,13 +323,13 @@
   </aside>
 
   <!-- MAIN -->
-  <main class="main-content flex-1 px-6 md:px-10 py-8 max-w-6xl">
+  <main class="main-content flex-1 px-4 sm:px-6 md:px-10 py-6 sm:py-8 max-w-6xl w-full">
     
     <!-- TOP BAR -->
-    <header class="flex items-center justify-between mb-10 flex-wrap gap-4">
-      <div>
+    <header class="flex items-center justify-between mb-8 sm:mb-10 flex-wrap gap-4">
+      <div class="min-w-0">
         <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-1" id="currentDate"></div>
-        <h1 class="font-condensed font-black text-4xl md:text-5xl tracking-tight leading-none" id="viewTitle">ENTRENAMIENTO</h1>
+        <h1 class="font-condensed font-black text-3xl sm:text-4xl md:text-5xl tracking-tight leading-none truncate" id="viewTitle">ENTRENAMIENTO</h1>
       </div>
       <div class="flex items-center gap-2" id="topActions"></div>
     </header>
@@ -313,48 +341,48 @@
 <!-- MOBILE NAV -->
 <nav class="mobile-nav fixed bottom-0 left-0 right-0 bg-[var(--bg-elevated)] border-t border-[var(--border)] z-40 px-2 py-2 justify-around">
   <div class="nav-item active flex-col items-center py-1.5 px-3 text-[10px] font-mono tracking-wider" data-view="today">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
     <span class="mt-1">HOY</span>
   </div>
   <div class="nav-item flex-col items-center py-1.5 px-3 text-[10px] font-mono tracking-wider text-[var(--muted)]" data-view="progress">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 17 9 11 13 15 21 7"/></svg>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 17 9 11 13 15 21 7"/></svg>
     <span class="mt-1">PROGRESO</span>
   </div>
   <div class="nav-item flex-col items-center py-1.5 px-3 text-[10px] font-mono tracking-wider text-[var(--muted)]" data-view="history">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     <span class="mt-1">HISTORIAL</span>
   </div>
   <div class="nav-item flex-col items-center py-1.5 px-3 text-[10px] font-mono tracking-wider text-[var(--muted)]" data-view="exercises">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5l11 11"/></svg>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5l11 11"/></svg>
     <span class="mt-1">EJERCICIOS</span>
   </div>
 </nav>
 
 <!-- MODAL: Añadir ejercicio -->
-<div id="exerciseModal" class="fixed inset-0 z-50 hidden items-center justify-center modal-overlay p-4">
-  <div class="bg-[var(--bg-card)] border border-[var(--border)] w-full max-w-2xl max-h-[80vh] flex flex-col">
-    <div class="p-5 border-b border-[var(--border)] flex items-center justify-between">
+<div id="exerciseModal" class="fixed inset-0 z-50 hidden items-center justify-center modal-overlay p-0 sm:p-4">
+  <div class="bg-[var(--bg-card)] border border-[var(--border)] w-full h-full sm:h-auto sm:max-h-[85vh] sm:max-w-2xl flex flex-col">
+    <div class="p-5 border-b border-[var(--border)] flex items-center justify-between flex-shrink-0">
       <div>
         <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest">SELECCIONAR</div>
         <h3 class="font-condensed font-black text-2xl">AÑADIR EJERCICIO</h3>
       </div>
-      <button onclick="closeExerciseModal()" class="text-[var(--muted)] hover:text-[var(--fg)] p-2">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      <button onclick="closeExerciseModal()" class="text-[var(--muted)] hover:text-[var(--fg)] p-2 -mr-2">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
     </div>
-    <div class="p-5 overflow-y-auto" id="exerciseList"></div>
-    <div class="p-4 border-t border-[var(--border)]">
-      <div class="flex gap-2">
-        <input type="text" id="customExerciseName" placeholder="Crear ejercicio personalizado..." class="flex-1 bg-transparent border border-[var(--border)] px-3 py-2 text-sm focus:outline-none focus:border-[var(--accent)]">
-        <input type="text" id="customExerciseGroup" placeholder="Grupo" class="w-32 bg-transparent border border-[var(--border)] px-3 py-2 text-sm focus:outline-none focus:border-[var(--accent)]">
-        <button onclick="addCustomExercise()" class="btn-primary px-4 py-2 text-sm">AÑADIR</button>
+    <div class="p-5 overflow-y-auto flex-1" id="exerciseList"></div>
+    <div class="p-4 border-t border-[var(--border)] flex-shrink-0">
+      <div class="flex flex-col sm:flex-row gap-2">
+        <input type="text" id="customExerciseName" placeholder="Crear ejercicio personalizado..." class="flex-1 bg-transparent border border-[var(--border)] px-3 py-2.5 text-sm focus:outline-none focus:border-[var(--accent)]">
+        <input type="text" id="customExerciseGroup" placeholder="Grupo" class="sm:w-32 bg-transparent border border-[var(--border)] px-3 py-2.5 text-sm focus:outline-none focus:border-[var(--accent)]">
+        <button onclick="addCustomExercise()" class="btn-primary px-4 py-2.5 text-sm">AÑADIR</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- TOAST CONTAINER -->
-<div id="toastContainer" class="fixed top-6 right-6 z-[100] flex flex-col gap-2 max-w-sm pointer-events-none"></div>
+<div id="toastContainer" class="fixed top-4 right-4 sm:top-6 sm:right-6 z-[100] flex flex-col gap-2 max-w-[calc(100%-2rem)] sm:max-w-sm pointer-events-none"></div>
 
 <script>
 // ============== STATE ==============
@@ -411,10 +439,6 @@ function formatDate(d) {
   const days = ['DOM','LUN','MAR','MIE','JUE','VIE','SAB'];
   const months = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
   return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
-}
-function formatTime(d) {
-  const date = new Date(d);
-  return `${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`;
 }
 function calculate1RM(weight, reps) {
   if (!weight || !reps) return 0;
@@ -480,7 +504,7 @@ function showToast(message, type = 'info', detail = '') {
     danger: 'border-[var(--danger)] text-[var(--danger)]',
     info: 'border-[var(--border-light)] text-[var(--fg)]'
   };
-  toast.className = `toast pointer-events-auto bg-[var(--bg-card)] border ${colors[type]} px-4 py-3 min-w-[260px]`;
+  toast.className = `toast pointer-events-auto bg-[var(--bg-card)] border ${colors[type]} px-4 py-3 w-full`;
   toast.innerHTML = `
     <div class="font-mono text-[10px] tracking-widest mb-0.5">${type === 'success' ? 'PR LOGRADO' : type === 'danger' ? 'ALERTA' : 'INFO'}</div>
     <div class="text-sm text-[var(--fg)] font-medium">${message}</div>
@@ -500,6 +524,7 @@ function switchView(view) {
   state.currentView = view;
   document.querySelectorAll('.nav-item').forEach(el => {
     el.classList.toggle('active', el.dataset.view === view);
+    el.classList.toggle('text-[var(--muted)]', el.dataset.view !== view);
   });
   const titles = {
     today: 'ENTRENAMIENTO',
@@ -509,6 +534,8 @@ function switchView(view) {
   };
   document.getElementById('viewTitle').textContent = titles[view];
   render();
+  // Scroll to top on view change
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ============== RENDER ==============
@@ -518,10 +545,8 @@ function render() {
   const container = document.getElementById('viewContainer');
   if (state.currentView === 'today') {
     container.innerHTML = renderToday();
-    attachTodayEvents();
   } else if (state.currentView === 'progress') {
     container.innerHTML = renderProgress();
-    attachProgressEvents();
   } else if (state.currentView === 'history') {
     container.innerHTML = renderHistory();
   } else if (state.currentView === 'exercises') {
@@ -534,20 +559,21 @@ function renderTopActions() {
   if (state.currentView === 'today') {
     if (state.currentSession && !state.currentSession.finished) {
       el.innerHTML = `
-        <button onclick="openExerciseModal()" class="btn-ghost px-4 py-2.5 text-sm font-medium flex items-center gap-2">
+        <button onclick="openExerciseModal()" class="btn-ghost px-3 sm:px-4 py-2.5 text-sm font-medium flex items-center gap-2">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-          Añadir ejercicio
+          <span class="hidden sm:inline">Añadir</span>
         </button>
-        <button onclick="finishSession()" class="btn-primary px-4 py-2.5 text-sm flex items-center gap-2">
+        <button onclick="finishSession()" class="btn-primary px-3 sm:px-4 py-2.5 text-sm flex items-center gap-2">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          Finalizar sesión
+          <span class="hidden sm:inline">Finalizar</span>
+          <span class="sm:hidden">OK</span>
         </button>
       `;
     } else {
       el.innerHTML = `
-        <button onclick="startNewSession()" class="btn-primary px-5 py-2.5 text-sm flex items-center gap-2">
+        <button onclick="startNewSession()" class="btn-primary px-4 sm:px-5 py-2.5 text-sm flex items-center gap-2">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Iniciar entrenamiento
+          Iniciar
         </button>
       `;
     }
@@ -578,24 +604,23 @@ function renderToday() {
 
   let html = `
     <div class="view">
-      <!-- Stats Row -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-        <div class="bg-[var(--bg-card)] border border-[var(--border)] p-4">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 mb-6 sm:mb-8">
+        <div class="bg-[var(--bg-card)] border border-[var(--border)] p-3 sm:p-4">
           <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-2">DURACIÓN</div>
-          <div class="big-num text-3xl">${elapsed}<span class="text-sm text-[var(--muted)] ml-1">min</span></div>
+          <div class="big-num text-2xl sm:text-3xl" id="durationStat">${elapsed}<span class="text-sm text-[var(--muted)] ml-1">min</span></div>
         </div>
-        <div class="bg-[var(--bg-card)] border border-[var(--border)] p-4">
+        <div class="bg-[var(--bg-card)] border border-[var(--border)] p-3 sm:p-4">
           <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-2">VOLUMEN</div>
-          <div class="big-num text-3xl">${Math.round(volume).toLocaleString()}<span class="text-sm text-[var(--muted)] ml-1">kg</span></div>
+          <div class="big-num text-2xl sm:text-3xl" id="volumeStat">${Math.round(volume).toLocaleString()}<span class="text-sm text-[var(--muted)] ml-1">kg</span></div>
         </div>
-        <div class="bg-[var(--bg-card)] border border-[var(--border)] p-4">
+        <div class="bg-[var(--bg-card)] border border-[var(--border)] p-3 sm:p-4">
           <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-2">SETS</div>
-          <div class="big-num text-3xl">${completedSets}<span class="text-sm text-[var(--muted)] ml-1">/${totalSets}</span></div>
+          <div class="big-num text-2xl sm:text-3xl">${completedSets}<span class="text-sm text-[var(--muted)] ml-1">/${totalSets}</span></div>
           <div class="progress-bar mt-2"><div class="progress-bar-fill" style="width: ${totalSets ? (completedSets/totalSets*100) : 0}%"></div></div>
         </div>
-        <div class="bg-[var(--bg-card)] border border-[var(--border)] p-4">
+        <div class="bg-[var(--bg-card)] border border-[var(--border)] p-3 sm:p-4">
           <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-2">EJERCICIOS</div>
-          <div class="big-num text-3xl">${session.exercises.length}</div>
+          <div class="big-num text-2xl sm:text-3xl">${session.exercises.length}</div>
         </div>
       </div>
 
@@ -606,9 +631,9 @@ function renderToday() {
 
   if (session.exercises.length === 0) {
     html += `
-      <div class="bg-[var(--bg-card)] border border-dashed border-[var(--border-light)] p-12 text-center">
-        <div class="font-condensed font-black text-2xl mb-2">SIN EJERCICIOS</div>
-        <div class="text-sm text-[var(--muted)] mb-6">Añade tu primer ejercicio para empezar el entrenamiento Heavy Duty.</div>
+      <div class="bg-[var(--bg-card)] border border-dashed border-[var(--border-light)] p-8 sm:p-12 text-center">
+        <div class="font-condensed font-black text-xl sm:text-2xl mb-2">SIN EJERCICIOS</div>
+        <div class="text-sm text-[var(--muted)] mb-6">Añade tu primer ejercicio para empezar.</div>
         <button onclick="openExerciseModal()" class="btn-primary px-5 py-2.5 text-sm">Añadir ejercicio</button>
       </div>
     `;
@@ -619,23 +644,33 @@ function renderToday() {
   }
 
   html += `</div>`;
+  
+  // Auto-refresh duration
+  if (window._durationInterval) clearInterval(window._durationInterval);
+  window._durationInterval = setInterval(() => {
+    if (state.currentView === 'today' && state.currentSession && !state.currentSession.finished) {
+      const durEl = document.getElementById('durationStat');
+      if (durEl) {
+        const elapsed = Math.floor((Date.now() - new Date(state.currentSession.date).getTime()) / 60000);
+        durEl.innerHTML = `${elapsed}<span class="text-sm text-[var(--muted)] ml-1">min</span>`;
+      }
+    }
+  }, 30000);
+  
   return html;
 }
 
 function renderEmptyToday() {
-  // Sugerencia de hoy basada en último entrenamiento
   const lastSession = state.sessions[state.sessions.length - 1];
   let suggestionHtml = '';
   if (lastSession) {
-    const lastDate = new Date(lastSession.date);
-    const daysAgo = Math.floor((Date.now() - lastDate.getTime()) / 86400000);
     suggestionHtml = `
-      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-5 mb-8">
+      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-4 sm:p-5 mb-6 sm:mb-8">
         <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-3">ÚLTIMA SESIÓN</div>
         <div class="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <div class="font-condensed font-black text-2xl mb-1">${formatDate(lastSession.date)}</div>
-            <div class="text-sm text-[var(--muted)]">${lastSession.exercises.length} ejercicios · ${Math.round(getSessionVolume(lastSession)).toLocaleString()} kg volumen</div>
+            <div class="font-condensed font-black text-xl sm:text-2xl mb-1">${formatDate(lastSession.date)}</div>
+            <div class="text-xs sm:text-sm text-[var(--muted)]">${lastSession.exercises.length} ejercicios · ${Math.round(getSessionVolume(lastSession)).toLocaleString()} kg</div>
           </div>
           <div class="flex flex-wrap gap-2">
             ${lastSession.exercises.map(e => `<span class="tag border border-[var(--border)] text-[var(--muted)]">${e.name}</span>`).join('')}
@@ -648,17 +683,17 @@ function renderEmptyToday() {
   return `
     <div class="view">
       ${suggestionHtml}
-      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-12 text-center relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-64 h-64 opacity-5">
+      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-8 sm:p-12 text-center relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 opacity-5 pointer-events-none">
           <svg viewBox="0 0 100 100" fill="currentColor"><path d="M50 10 L60 40 L90 40 L65 60 L75 90 L50 70 L25 90 L35 60 L10 40 L40 40 Z"/></svg>
         </div>
         <div class="relative">
           <div class="font-mono text-[10px] text-[var(--accent)] tracking-widest mb-3">HEAVY DUTY · HIGH INTENSITY TRAINING</div>
-          <h2 class="font-condensed font-black text-5xl md:text-6xl mb-4 tracking-tight">¿LISTO PARA<br>EL FALLO?</h2>
+          <h2 class="font-condensed font-black text-4xl sm:text-5xl md:text-6xl mb-4 tracking-tight">¿LISTO PARA<br>EL FALLO?</h2>
           <p class="text-[var(--muted)] text-sm max-w-md mx-auto mb-8 leading-relaxed">
             Tres series. La primera despierta el músculo. La segunda te lleva a 6-8 reps. La tercera, más peso, 4-6 reps, hasta el fallo absoluto.
           </p>
-          <button onclick="startNewSession()" class="btn-primary px-8 py-3.5 text-sm inline-flex items-center gap-3">
+          <button onclick="startNewSession()" class="btn-primary px-6 sm:px-8 py-3 sm:py-3.5 text-sm inline-flex items-center gap-3">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             INICIAR ENTRENAMIENTO
           </button>
@@ -670,13 +705,12 @@ function renderEmptyToday() {
 
 function renderExerciseCard(ex, idx) {
   const lastSession = getLastSessionForExercise(ex.exerciseId, state.currentSession?.id);
-  const suggested = getSuggestedWeight(ex.exerciseId, 'heavy');
   
   let suggestionHtml = '';
   if (lastSession) {
     const last1RM = calculate1RM(lastSession.weight, lastSession.reps).toFixed(1);
     suggestionHtml = `
-      <div class="suggestion-box px-3 py-2 mt-3 flex items-center justify-between text-xs">
+      <div class="suggestion-box px-3 py-2 mt-3 flex items-center justify-between text-xs flex-wrap gap-2">
         <div class="flex items-center gap-2">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           <span class="text-[var(--muted)]">Último: <span class="font-mono text-[var(--fg)]">${lastSession.weight}kg × ${lastSession.reps}</span></span>
@@ -696,39 +730,42 @@ function renderExerciseCard(ex, idx) {
   ex.sets.forEach((set, setIdx) => {
     const cfg = setsConfig[setIdx];
     const completed = set.completed;
-    const isPRSet = set.type === 'heavy' && completed && set.weight && set.reps && isPR(ex.exerciseId, set.weight, set.reps);
     
     setsHtml += `
-      <div class="set-row ${cfg.color} ${completed ? 'completed' : ''} grid grid-cols-[24px_1fr_auto_auto_auto] gap-3 items-center px-4 py-3 border-b border-[var(--border)] last:border-b-0">
+      <div class="set-row ${cfg.color} ${completed ? 'completed' : ''}">
         <div class="check-set ${completed ? 'checked ' + cfg.color : ''}" onclick="toggleSetCompleted(${idx}, ${setIdx})">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
-        <div>
-          <div class="flex items-center gap-2">
+        <div class="flex-1 min-w-0 min-w-[120px]">
+          <div class="flex items-center gap-2 flex-wrap">
             <span class="tag" style="color: var(--${cfg.color}); border: 1px solid var(--${cfg.color});">${cfg.label}</span>
             <span class="text-[10px] text-[var(--muted)] font-mono">${cfg.repRange} reps</span>
             ${set.type === 'heavy' ? '<span class="failure-indicator"><span class="failure-dot"></span>FALLO</span>' : ''}
           </div>
-          <div class="text-xs text-[var(--muted)] mt-1">${cfg.desc}</div>
+          <div class="text-xs text-[var(--muted)] mt-1 hidden sm:block">${cfg.desc}</div>
         </div>
-        <div class="flex items-center gap-1.5">
-          <input type="number" 
-                 value="${set.weight || ''}" 
-                 placeholder="0" 
-                 class="set-input ${cfg.color} w-16 px-2 py-1.5 text-center text-sm"
-                 onchange="updateSet(${idx}, ${setIdx}, 'weight', this.value)"
-                 onclick="this.select()">
-          <span class="text-xs text-[var(--muted)] font-mono">kg</span>
-        </div>
-        <span class="text-[var(--dim)]">×</span>
-        <div class="flex items-center gap-1.5">
-          <input type="number" 
-                 value="${set.reps || ''}" 
-                 placeholder="0" 
-                 class="set-input ${cfg.color} w-14 px-2 py-1.5 text-center text-sm"
-                 onchange="updateSet(${idx}, ${setIdx}, 'reps', this.value)"
-                 onclick="this.select()">
-          <span class="text-xs text-[var(--muted)] font-mono">reps</span>
+        <div class="flex items-center gap-2 ml-auto">
+          <div class="flex items-center gap-1.5">
+            <input type="number" 
+                   value="${set.weight || ''}" 
+                   placeholder="0" 
+                   inputmode="decimal"
+                   class="set-input ${cfg.color} w-16 sm:w-20 px-2 py-2 text-center"
+                   onchange="updateSet(${idx}, ${setIdx}, 'weight', this.value)"
+                   onclick="this.select()">
+            <span class="text-xs text-[var(--muted)] font-mono">kg</span>
+          </div>
+          <span class="text-[var(--dim)]">×</span>
+          <div class="flex items-center gap-1.5">
+            <input type="number" 
+                   value="${set.reps || ''}" 
+                   placeholder="0" 
+                   inputmode="numeric"
+                   class="set-input ${cfg.color} w-14 sm:w-16 px-2 py-2 text-center"
+                   onchange="updateSet(${idx}, ${setIdx}, 'reps', this.value)"
+                   onclick="this.select()">
+            <span class="text-xs text-[var(--muted)] font-mono">reps</span>
+          </div>
         </div>
       </div>
     `;
@@ -736,16 +773,16 @@ function renderExerciseCard(ex, idx) {
 
   return `
     <div class="exercise-card bg-[var(--bg-card)] border border-[var(--border)] mb-4 animate-slide-up">
-      <div class="p-4 flex items-start justify-between">
-        <div class="flex-1">
+      <div class="p-4 flex items-start justify-between gap-3">
+        <div class="flex-1 min-w-0">
           <div class="flex items-center gap-2 mb-1">
             <span class="tag border border-[var(--border)] text-[var(--muted)]">${ex.group}</span>
           </div>
-          <h3 class="font-condensed font-black text-2xl tracking-tight">${ex.name}</h3>
+          <h3 class="font-condensed font-black text-xl sm:text-2xl tracking-tight truncate">${ex.name}</h3>
           ${suggestionHtml}
         </div>
-        <button onclick="removeExercise(${idx})" class="text-[var(--muted)] hover:text-[var(--danger)] p-2 -mr-2" title="Eliminar">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+        <button onclick="removeExercise(${idx})" class="text-[var(--muted)] hover:text-[var(--danger)] p-2 -mr-2 flex-shrink-0" title="Eliminar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
         </button>
       </div>
       <div class="border-t border-[var(--border)]">
@@ -753,23 +790,6 @@ function renderExerciseCard(ex, idx) {
       </div>
     </div>
   `;
-}
-
-function attachTodayEvents() {
-  // Auto-refresh duration
-  if (state.currentSession && !state.currentSession.finished) {
-    if (window._durationInterval) clearInterval(window._durationInterval);
-    window._durationInterval = setInterval(() => {
-      if (state.currentView === 'today' && state.currentSession && !state.currentSession.finished) {
-        const container = document.getElementById('viewContainer');
-        const firstBigNum = container?.querySelector('.grid > div:first-child .big-num');
-        if (firstBigNum) {
-          const elapsed = Math.floor((Date.now() - new Date(state.currentSession.date).getTime()) / 60000);
-          firstBigNum.innerHTML = `${elapsed}<span class="text-sm text-[var(--muted)] ml-1">min</span>`;
-        }
-      }
-    }, 30000);
-  }
 }
 
 // ============== TODAY ACTIONS ==============
@@ -795,7 +815,6 @@ function finishSession() {
   state.currentSession.endDate = new Date().toISOString();
   state.sessions.push(state.currentSession);
   
-  // Check for new PRs
   let newPRs = 0;
   state.currentSession.exercises.forEach(ex => {
     const heavySet = ex.sets.find(s => s.type === 'heavy' && s.completed && s.weight && s.reps);
@@ -823,7 +842,6 @@ function toggleSetCompleted(exIdx, setIdx) {
   
   if (set.completed && set.type === 'heavy' && set.weight && set.reps) {
     if (isPR(ex.exerciseId, set.weight, set.reps)) {
-      const pr = getPRForExercise(ex.exerciseId);
       setTimeout(() => {
         showToast(`${ex.name} — Nuevo PR`, 'success', `${set.weight}kg × ${set.reps} reps`);
       }, 100);
@@ -838,15 +856,11 @@ function updateSet(exIdx, setIdx, field, value) {
   const set = state.currentSession.exercises[exIdx].sets[setIdx];
   set[field] = value ? parseFloat(value) : null;
   saveState();
-  // Update stats without full re-render
   renderSidebarStats();
-  // Update volume in stats row
+  
   const volume = getSessionVolume(state.currentSession);
-  const statsRow = document.querySelector('.grid.grid-cols-2');
-  if (statsRow) {
-    const volCell = statsRow.children[1].querySelector('.big-num');
-    if (volCell) volCell.innerHTML = `${Math.round(volume).toLocaleString()}<span class="text-sm text-[var(--muted)] ml-1">kg</span>`;
-  }
+  const volEl = document.getElementById('volumeStat');
+  if (volEl) volEl.innerHTML = `${Math.round(volume).toLocaleString()}<span class="text-sm text-[var(--muted)] ml-1">kg</span>`;
 }
 
 function removeExercise(idx) {
@@ -877,7 +891,7 @@ function renderExerciseList() {
     html += `
       <div class="mb-4">
         <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-2">${group.toUpperCase()}</div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
     `;
     exercises.filter(e => e.group === group).forEach(ex => {
       const last = getLastSessionForExercise(ex.id);
@@ -934,8 +948,8 @@ function renderProgress() {
   if (exercises.length === 0) {
     return `
       <div class="view">
-        <div class="bg-[var(--bg-card)] border border-dashed border-[var(--border-light)] p-12 text-center">
-          <div class="font-condensed font-black text-2xl mb-2">SIN DATOS</div>
+        <div class="bg-[var(--bg-card)] border border-dashed border-[var(--border-light)] p-8 sm:p-12 text-center">
+          <div class="font-condensed font-black text-xl sm:text-2xl mb-2">SIN DATOS</div>
           <div class="text-sm text-[var(--muted)]">Completa al menos una sesión para ver tu progreso.</div>
         </div>
       </div>
@@ -956,54 +970,49 @@ function renderProgress() {
   
   let html = `
     <div class="view">
-      <!-- Exercise selector -->
-      <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+      <div class="flex gap-2 mb-6 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
   `;
   exercises.forEach(e => {
     const active = e.id === state.selectedExerciseForProgress;
     html += `
-      <button onclick="selectExerciseProgress('${e.id}')" class="px-4 py-2 text-sm font-medium border ${active ? 'bg-[var(--accent)] text-black border-[var(--accent)]' : 'border-[var(--border)] text-[var(--muted)] hover:border-[var(--border-light)] hover:text-[var(--fg)]'} whitespace-nowrap transition-all">
+      <button onclick="selectExerciseProgress('${e.id}')" class="px-4 py-2 text-sm font-medium border ${active ? 'bg-[var(--accent)] text-black border-[var(--accent)]' : 'border-[var(--border)] text-[var(--muted)] hover:border-[var(--border-light)] hover:text-[var(--fg)]'} whitespace-nowrap transition-all flex-shrink-0">
         ${e.name}
       </button>
     `;
   });
   html += `</div>`;
   
-  // Stats
   html += `
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 mb-6 sm:mb-8">
+      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-3 sm:p-4">
         <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-2">PR ACTUAL</div>
-        <div class="big-num text-3xl" style="color: var(--accent)">${pr.estimated1RM.toFixed(1)}<span class="text-sm text-[var(--muted)] ml-1">kg</span></div>
-        <div class="font-mono text-[10px] text-[var(--muted)] mt-1">${pr.weight}kg × ${pr.reps} reps</div>
+        <div class="big-num text-2xl sm:text-3xl" style="color: var(--accent)">${pr.estimated1RM.toFixed(1)}<span class="text-sm text-[var(--muted)] ml-1">kg</span></div>
+        <div class="font-mono text-[10px] text-[var(--muted)] mt-1 truncate">${pr.weight}kg × ${pr.reps} reps</div>
       </div>
-      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-4">
+      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-3 sm:p-4">
         <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-2">PROGRESO</div>
-        <div class="big-num text-3xl ${progress1RM >= 0 ? 'text-[var(--accent)]' : 'text-[var(--danger)]'}">${progress1RM >= 0 ? '+' : ''}${progress1RM.toFixed(1)}<span class="text-sm text-[var(--muted)] ml-1">kg</span></div>
+        <div class="big-num text-2xl sm:text-3xl ${progress1RM >= 0 ? 'text-[var(--accent)]' : 'text-[var(--danger)]'}">${progress1RM >= 0 ? '+' : ''}${progress1RM.toFixed(1)}<span class="text-sm text-[var(--muted)] ml-1">kg</span></div>
         <div class="font-mono text-[10px] text-[var(--muted)] mt-1">${progressPct >= 0 ? '+' : ''}${progressPct.toFixed(1)}% 1RM</div>
       </div>
-      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-4">
+      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-3 sm:p-4">
         <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-2">SESIONES</div>
-        <div class="big-num text-3xl">${history.length}</div>
+        <div class="big-num text-2xl sm:text-3xl">${history.length}</div>
         <div class="font-mono text-[10px] text-[var(--muted)] mt-1">desde ${formatDate(first.date).split(' ').slice(0,3).join(' ')}</div>
       </div>
-      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-4">
+      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-3 sm:p-4">
         <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-2">ÚLTIMO</div>
-        <div class="big-num text-3xl">${last.weight}<span class="text-sm text-[var(--muted)] ml-1">kg</span></div>
+        <div class="big-num text-2xl sm:text-3xl">${last.weight}<span class="text-sm text-[var(--muted)] ml-1">kg</span></div>
         <div class="font-mono text-[10px] text-[var(--muted)] mt-1">${last.reps} reps · ${formatDate(last.date).split(' ').slice(0,3).join(' ')}</div>
       </div>
     </div>
-  `;
-  
-  // Chart
-  html += `
-    <div class="bg-[var(--bg-card)] border border-[var(--border)] p-5 mb-8">
+    
+    <div class="bg-[var(--bg-card)] border border-[var(--border)] p-4 sm:p-5 mb-6 sm:mb-8">
       <div class="flex items-center justify-between mb-4">
         <div>
           <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest">1RM ESTIMADO · PROGRESIÓN</div>
-          <h3 class="font-condensed font-black text-xl">${ex.name.toUpperCase()}</h3>
+          <h3 class="font-condensed font-black text-lg sm:text-xl">${ex.name.toUpperCase()}</h3>
         </div>
-        <div class="text-right">
+        <div class="text-right hidden sm:block">
           <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest">FÓRMULA EPLEY</div>
           <div class="font-mono text-xs text-[var(--muted)]">1RM = w × (1 + r/30)</div>
         </div>
@@ -1012,16 +1021,13 @@ function renderProgress() {
         ${renderProgressChart(history)}
       </div>
     </div>
-  `;
-  
-  // History table for this exercise
-  html += `
+    
     <div class="bg-[var(--bg-card)] border border-[var(--border)]">
       <div class="p-4 border-b border-[var(--border)]">
         <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest">HISTORIAL DETALLADO</div>
       </div>
       <div class="overflow-x-auto">
-        <table class="w-full text-sm">
+        <table class="w-full text-sm min-w-[500px]">
           <thead>
             <tr class="border-b border-[var(--border)]">
               <th class="text-left p-3 font-mono text-[10px] text-[var(--muted)] tracking-widest font-medium">FECHA</th>
@@ -1040,13 +1046,13 @@ function renderProgress() {
               const isPR = h.estimated1RM === pr.estimated1RM && h.date === pr.date;
               return `
                 <tr class="border-b border-[var(--border)] last:border-b-0 hover:bg-[var(--bg-elevated)]">
-                  <td class="p-3 font-mono text-xs">
+                  <td class="p-3 font-mono text-xs whitespace-nowrap">
                     ${formatDate(h.date)}
                     ${isPR ? '<span class="ml-2 tag" style="background: var(--accent); color: black;">PR</span>' : ''}
                   </td>
                   <td class="p-3 font-mono text-xs text-[var(--muted)]">${wu && wu.weight ? `${wu.weight}×${wu.reps}` : '—'}</td>
                   <td class="p-3 font-mono text-xs text-[var(--muted)]">${wk && wk.weight ? `${wk.weight}×${wk.reps}` : '—'}</td>
-                  <td class="p-3 font-mono text-xs ${hv && hv.toFailure ? 'text-[var(--heavy)]' : 'text-[var(--fg)]'}">${hv && hv.weight ? `${hv.weight}×${hv.reps}` : '—'}</td>
+                  <td class="p-3 font-mono text-xs ${hv ? 'text-[var(--heavy)]' : 'text-[var(--fg)]'}">${hv && hv.weight ? `${hv.weight}×${hv.reps}` : '—'}</td>
                   <td class="p-3 font-mono text-sm text-right ${isPR ? 'text-[var(--accent)] font-bold' : ''}">${h.estimated1RM.toFixed(1)}kg</td>
                 </tr>
               `;
@@ -1080,7 +1086,6 @@ function renderProgressChart(history) {
     return { x, y, data: h };
   });
   
-  // Grid lines (4)
   let gridLines = '';
   for (let i = 0; i <= 4; i++) {
     const y = padding.top + (i / 4) * innerH;
@@ -1089,15 +1094,12 @@ function renderProgressChart(history) {
     gridLines += `<text x="${padding.left - 8}" y="${y + 4}" text-anchor="end" font-family="JetBrains Mono" font-size="10" fill="var(--muted)">${val.toFixed(0)}</text>`;
   }
   
-  // Area path
   const areaPath = `M ${points[0].x} ${padding.top + innerH} ` + 
                    points.map(p => `L ${p.x} ${p.y}`).join(' ') + 
                    ` L ${points[points.length-1].x} ${padding.top + innerH} Z`;
   
-  // Line path
   const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
   
-  // Dots
   let dots = '';
   points.forEach((p, i) => {
     const isPR = p.data.estimated1RM === Math.max(...values);
@@ -1107,7 +1109,6 @@ function renderProgressChart(history) {
     }
   });
   
-  // X labels
   let xLabels = '';
   const maxLabels = Math.min(history.length, 6);
   const step = Math.max(1, Math.floor(history.length / maxLabels));
@@ -1141,15 +1142,14 @@ function selectExerciseProgress(id) {
   state.selectedExerciseForProgress = id;
   render();
 }
-function attachProgressEvents() {}
 
 // ============== HISTORY VIEW ==============
 function renderHistory() {
   if (state.sessions.length === 0) {
     return `
       <div class="view">
-        <div class="bg-[var(--bg-card)] border border-dashed border-[var(--border-light)] p-12 text-center">
-          <div class="font-condensed font-black text-2xl mb-2">SIN SESIONES</div>
+        <div class="bg-[var(--bg-card)] border border-dashed border-[var(--border-light)] p-8 sm:p-12 text-center">
+          <div class="font-condensed font-black text-xl sm:text-2xl mb-2">SIN SESIONES</div>
           <div class="text-sm text-[var(--muted)]">Tu historial de entrenamientos aparecerá aquí.</div>
         </div>
       </div>
@@ -1158,27 +1158,25 @@ function renderHistory() {
   
   let html = `<div class="view">`;
   
-  // Summary
   const totalVol = state.sessions.reduce((sum, s) => sum + getSessionVolume(s), 0);
   const avgVol = totalVol / state.sessions.length;
   html += `
-    <div class="grid grid-cols-3 gap-3 mb-8">
-      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-4">
-        <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-2">TOTAL SESIONES</div>
-        <div class="big-num text-3xl">${state.sessions.length}</div>
+    <div class="grid grid-cols-3 gap-2 sm:gap-3 mb-6 sm:mb-8">
+      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-3 sm:p-4">
+        <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-2">TOTAL</div>
+        <div class="big-num text-2xl sm:text-3xl">${state.sessions.length}</div>
       </div>
-      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-4">
-        <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-2">VOLUMEN TOTAL</div>
-        <div class="big-num text-3xl">${Math.round(totalVol).toLocaleString()}<span class="text-sm text-[var(--muted)] ml-1">kg</span></div>
+      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-3 sm:p-4">
+        <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-2">VOLUMEN</div>
+        <div class="big-num text-2xl sm:text-3xl">${Math.round(totalVol).toLocaleString()}<span class="text-sm text-[var(--muted)] ml-1">kg</span></div>
       </div>
-      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-4">
-        <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-2">PROMEDIO/SESIÓN</div>
-        <div class="big-num text-3xl">${Math.round(avgVol).toLocaleString()}<span class="text-sm text-[var(--muted)] ml-1">kg</span></div>
+      <div class="bg-[var(--bg-card)] border border-[var(--border)] p-3 sm:p-4">
+        <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-2">PROMEDIO</div>
+        <div class="big-num text-2xl sm:text-3xl">${Math.round(avgVol).toLocaleString()}<span class="text-sm text-[var(--muted)] ml-1">kg</span></div>
       </div>
     </div>
   `;
   
-  // Sessions list
   [...state.sessions].reverse().forEach(s => {
     const vol = getSessionVolume(s);
     const duration = Math.floor((new Date(s.endDate) - new Date(s.date)) / 60000);
@@ -1189,33 +1187,33 @@ function renderHistory() {
     
     html += `
       <details class="bg-[var(--bg-card)] border border-[var(--border)] mb-3 group">
-        <summary class="p-4 flex items-center justify-between hover:bg-[var(--bg-elevated)] transition-colors">
-          <div class="flex items-center gap-4 flex-1">
-            <div class="w-12 h-12 border border-[var(--border)] flex flex-col items-center justify-center">
+        <summary class="p-4 flex items-center justify-between hover:bg-[var(--bg-elevated)] transition-colors gap-3">
+          <div class="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+            <div class="w-12 h-12 border border-[var(--border)] flex flex-col items-center justify-center flex-shrink-0">
               <div class="font-condensed font-black text-lg leading-none">${new Date(s.date).getDate()}</div>
               <div class="font-mono text-[8px] text-[var(--muted)] tracking-widest mt-0.5">${['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'][new Date(s.date).getMonth()]}</div>
             </div>
-            <div>
-              <div class="font-condensed font-black text-lg">${formatDate(s.date)}</div>
-              <div class="flex items-center gap-3 text-xs text-[var(--muted)] mt-0.5">
-                <span class="font-mono">${s.exercises.length} ejercicios</span>
+            <div class="min-w-0">
+              <div class="font-condensed font-black text-base sm:text-lg truncate">${formatDate(s.date)}</div>
+              <div class="flex items-center gap-2 sm:gap-3 text-xs text-[var(--muted)] mt-0.5 flex-wrap">
+                <span class="font-mono">${s.exercises.length} ej.</span>
                 <span class="font-mono">·</span>
                 <span class="font-mono">${Math.round(vol).toLocaleString()} kg</span>
-                <span class="font-mono">·</span>
-                <span class="font-mono">${duration} min</span>
+                <span class="font-mono hidden sm:inline">·</span>
+                <span class="font-mono hidden sm:inline">${duration} min</span>
                 ${prs > 0 ? `<span class="tag" style="background: var(--accent); color: black;">${prs} PR</span>` : ''}
               </div>
             </div>
           </div>
-          <svg class="chevron text-[var(--muted)]" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <svg class="chevron text-[var(--muted)] flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         </summary>
         <div class="border-t border-[var(--border)]">
           ${s.exercises.map(ex => {
             const hv = ex.sets.find(set => set.type === 'heavy' && set.weight);
             const isPrSet = hv && isPR(ex.exerciseId, hv.weight, hv.reps);
             return `
-              <div class="p-4 border-b border-[var(--border)] last:border-b-0 hover:bg-[var(--bg-elevated)]">
-                <div class="flex items-center justify-between mb-2">
+              <div class="p-4 border-b border-[var(--border)] last:border-b-0">
+                <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
                   <div class="flex items-center gap-2">
                     <span class="tag border border-[var(--border)] text-[var(--muted)]">${ex.group}</span>
                     <span class="font-condensed font-bold text-base">${ex.name}</span>
@@ -1248,16 +1246,14 @@ function renderHistory() {
 // ============== EXERCISES VIEW ==============
 function renderExercises() {
   const exercises = getAllExercises();
-  const groups = [...new Set(exercises.map(e => e.group))];
   
   let html = `<div class="view">`;
   
-  // PRs by exercise
   html += `
     <div class="bg-[var(--bg-card)] border border-[var(--border)] mb-6">
       <div class="p-4 border-b border-[var(--border)]">
         <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest">RECORDS PERSONALES</div>
-        <h3 class="font-condensed font-black text-xl">PRs POR EJERCICIO</h3>
+        <h3 class="font-condensed font-black text-lg sm:text-xl">PRs POR EJERCICIO</h3>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-[var(--border)]">
   `;
@@ -1267,13 +1263,13 @@ function renderExercises() {
     const history = getExerciseHistory(ex.id);
     html += `
       <div class="bg-[var(--bg-card)] p-4 flex items-center justify-between hover:bg-[var(--bg-elevated)] transition-colors cursor-pointer" onclick="selectExerciseProgress('${ex.id}');switchView('progress')">
-        <div>
-          <div class="font-condensed font-bold text-base">${ex.name}</div>
+        <div class="min-w-0 mr-2">
+          <div class="font-condensed font-bold text-base truncate">${ex.name}</div>
           <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mt-0.5">${ex.group.toUpperCase()} · ${history.length} SESIONES</div>
         </div>
-        <div class="text-right">
+        <div class="text-right flex-shrink-0">
           ${pr ? `
-            <div class="big-num text-2xl" style="color: var(--accent)">${pr.estimated1RM.toFixed(1)}<span class="text-xs text-[var(--muted)] ml-1">kg</span></div>
+            <div class="big-num text-xl sm:text-2xl" style="color: var(--accent)">${pr.estimated1RM.toFixed(1)}<span class="text-xs text-[var(--muted)] ml-1">kg</span></div>
             <div class="font-mono text-[10px] text-[var(--muted)]">${pr.weight}kg × ${pr.reps}</div>
           ` : '<div class="font-mono text-xs text-[var(--dim)]">SIN DATOS</div>'}
         </div>
@@ -1284,16 +1280,12 @@ function renderExercises() {
   html += `
       </div>
     </div>
-  `;
-  
-  // Custom exercise creator
-  html += `
-    <div class="bg-[var(--bg-card)] border border-[var(--border)] p-5">
+    <div class="bg-[var(--bg-card)] border border-[var(--border)] p-4 sm:p-5">
       <div class="font-mono text-[10px] text-[var(--muted)] tracking-widest mb-1">CREAR NUEVO</div>
-      <h3 class="font-condensed font-black text-xl mb-4">EJERCICIO PERSONALIZADO</h3>
-      <div class="flex flex-col md:flex-row gap-2">
+      <h3 class="font-condensed font-black text-lg sm:text-xl mb-4">EJERCICIO PERSONALIZADO</h3>
+      <div class="flex flex-col sm:flex-row gap-2">
         <input type="text" id="newExName" placeholder="Nombre del ejercicio" class="flex-1 bg-transparent border border-[var(--border)] px-3 py-2.5 text-sm focus:outline-none focus:border-[var(--accent)]">
-        <input type="text" id="newExGroup" placeholder="Grupo muscular" class="md:w-48 bg-transparent border border-[var(--border)] px-3 py-2.5 text-sm focus:outline-none focus:border-[var(--accent)]">
+        <input type="text" id="newExGroup" placeholder="Grupo muscular" class="sm:w-48 bg-transparent border border-[var(--border)] px-3 py-2.5 text-sm focus:outline-none focus:border-[var(--accent)]">
         <button onclick="createExercise()" class="btn-primary px-5 py-2.5 text-sm">CREAR</button>
       </div>
     </div>
@@ -1326,27 +1318,18 @@ function updateDate() {
   document.getElementById('currentDate').textContent = `${days[now.getDay()]} · ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
 }
 
-// Event delegation for nav
 document.querySelectorAll('.nav-item').forEach(el => {
   el.addEventListener('click', () => switchView(el.dataset.view));
 });
 
-// Close modal on overlay click
 document.getElementById('exerciseModal').addEventListener('click', (e) => {
   if (e.target.id === 'exerciseModal') closeExerciseModal();
 });
 
-// Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeExerciseModal();
-  if (e.key === 'n' && state.currentView === 'today' && state.currentSession && !state.currentSession.finished) {
-    if (document.activeElement.tagName !== 'INPUT') {
-      openExerciseModal();
-    }
-  }
 });
 
-// Init
 loadState();
 updateDate();
 setInterval(updateDate, 60000);
