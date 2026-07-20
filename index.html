@@ -1,1024 +1,1621 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>RodaSeguro — ID de Emergencia</title>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --red:      #E8002D;
-    --red-dark: #B5001F;
-    --red-glow: rgba(232,0,45,0.25);
-    --amber:    #FF6B00;
-    --green:    #00C853;
-    --blue:     #0288D1;
-    --bg:       #0A0C0F;
-    --surface:  #111418;
-    --card:     #181C22;
-    --border:   rgba(255,255,255,0.08);
-    --text:     #F0F2F5;
-    --muted:    #8A94A0;
-    --white:    #FFFFFF;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Heavy Duty Tracker</title>
+    <style>
+        :root {
+            --bg: #0f1318;
+            --surface: #181c22;
+            --surface-hover: #1e232b;
+            --surface-elevated: #1f252d;
+            --border: #252b33;
+            --border-light: #2d3540;
+            --text: #e8ecf0;
+            --text-secondary: #8b95a3;
+            --text-tertiary: #5c6673;
+            --accent: #7aaa8a;
+            --accent-glow: rgba(122, 170, 138, 0.25);
+            --accent-strong: #5b9b6b;
+            --accent-subtle: #3d5a45;
+            --warm: #c4a87c;
+            --warm-glow: rgba(196, 168, 124, 0.2);
+            --danger: #d4756b;
+            --danger-subtle: #4a2e2b;
+            --series1: #8aab9e;
+            --series2: #6b9e7a;
+            --series3: #4a8c5c;
+            --radius-sm: 10px;
+            --radius: 16px;
+            --radius-lg: 22px;
+            --radius-xl: 28px;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --font: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
 
-- { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            font-size: 16px;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            height: 100%;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            min-height: 100dvh;
+            line-height: 1.5;
+            letter-spacing: -0.01em;
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 100px;
+        }
 
-body {
-font-family:‘DM Sans’, sans-serif;
-background: var(–bg);
-color: var(–text);
-min-height:100vh;
-overflow-x:hidden;
-}
+        /* Subtle background texture */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(122, 170, 138, 0.03) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(196, 168, 124, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
 
-/* ── HERO EMERGENCY SCREEN ────────────────────────────── */
-#emergency-screen {
-display:flex; flex-direction:column; align-items:center; justify-content:center;
-min-height:100vh;
-background: radial-gradient(ellipse at 50% 30%, rgba(232,0,45,0.18) 0%, var(–bg) 65%);
-padding:24px;
-position:relative;
-overflow:hidden;
-}
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 16px 18px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
 
-#emergency-screen::before {
-content:’’;
-position:absolute; inset:0;
-background: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.02) 40px),
-repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.02) 40px);
-pointer-events:none;
-}
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 4px 2px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: var(--bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s;
+        }
+        .header.scrolled {
+            border-bottom-color: var(--border);
+        }
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, #1e2a22, #1a241d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            border: 1px solid var(--accent-subtle);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .header-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text);
+        }
+        .header-subtitle {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .header-date {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            background: var(--surface);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            letter-spacing: -0.01em;
+        }
 
-.pulse-ring {
-position:absolute;
-width:320px; height:320px;
-border-radius:50%;
-border:1px solid var(–red-glow);
-animation: pulse-out 3s ease-out infinite;
-top:50%; left:50%; transform:translate(-50%,-50%);
-}
-.pulse-ring:nth-child(2) { animation-delay:1s; }
-.pulse-ring:nth-child(3) { animation-delay:2s; }
+        /* Summary strip */
+        .summary-strip {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 4px 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .summary-strip::-webkit-scrollbar {
+            display: none;
+        }
+        .summary-chip {
+            flex-shrink: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            letter-spacing: -0.01em;
+            white-space: nowrap;
+            transition: all var(--transition);
+        }
+        .summary-chip .chip-value {
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        .summary-chip .chip-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent-glow);
+        }
+        .summary-chip.pr-chip .chip-dot {
+            background: var(--warm);
+            box-shadow: 0 0 8px var(--warm-glow);
+        }
 
-@keyframes pulse-out {
-0%   { transform:translate(-50%,-50%) scale(0.6); opacity:0.8; }
-100% { transform:translate(-50%,-50%) scale(2.2); opacity:0; }
-}
+        /* Exercise cards grid */
+        .exercises-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .exercise-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 16px 18px;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            -webkit-tap-highlight-color: transparent;
+            animation: fadeInUp 0.4s ease forwards;
+            opacity: 0;
+            transform: translateY(12px);
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .exercise-card:active {
+            transform: scale(0.985);
+            background: var(--surface-hover);
+            transition: all 0.1s ease;
+        }
+        .exercise-card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+        .exercise-card::after {
+            content: '';
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 6px;
+            border-right: 2px solid var(--text-tertiary);
+            border-top: 2px solid var(--text-tertiary);
+            rotate: 45deg;
+            opacity: 0.5;
+            transition: all var(--transition);
+        }
+        .exercise-card:hover::after {
+            opacity: 0.8;
+            right: 14px;
+        }
+        .card-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: var(--radius);
+            background: var(--surface-elevated);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            border: 1px solid var(--border-light);
+        }
+        .card-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .card-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: -0.01em;
+            color: var(--text);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .card-meta {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            letter-spacing: 0.01em;
+        }
+        .card-weight {
+            font-weight: 700;
+            font-size: 1.35rem;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            text-align: right;
+            flex-shrink: 0;
+            margin-right: 20px;
+            font-variant-numeric: tabular-nums;
+            font-family: var(--font-mono);
+        }
+        .card-weight span {
+            font-size: 0.65rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+        .card-trend {
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            padding: 3px 7px;
+            border-radius: 10px;
+            background: transparent;
+            transition: all var(--transition);
+        }
+        .card-trend.up {
+            color: #5b9b6b;
+            background: rgba(91, 155, 107, 0.1);
+        }
+        .card-trend.down {
+            color: #d4756b;
+            background: rgba(212, 117, 107, 0.1);
+        }
+        .card-trend.neutral {
+            color: var(--text-tertiary);
+            background: rgba(139, 149, 163, 0.06);
+        }
+        .sparkline-row {
+            display: flex;
+            gap: 3px;
+            align-items: flex-end;
+            height: 20px;
+            margin-top: 6px;
+            opacity: 0.7;
+        }
+        .sparkline-bar {
+            width: 4px;
+            border-radius: 2px;
+            background: var(--accent-subtle);
+            transition: all var(--transition);
+            min-height: 4px;
+        }
+        .sparkline-bar.latest {
+            background: var(--accent);
+            box-shadow: 0 0 6px var(--accent-glow);
+        }
+        .sparkline-bar.pr {
+            background: var(--warm);
+            box-shadow: 0 0 6px var(--warm-glow);
+        }
 
-.brand-badge {
-display:flex; align-items:center; gap:10px;
-margin-bottom:32px;
-position:relative; z-index:2;
-}
-.brand-badge .icon-wrap {
-width:44px; height:44px; border-radius:12px;
-background:var(–red); display:grid; place-items:center;
-font-size:22px;
-}
-.brand-badge span {
-font-family:‘Rajdhani’, sans-serif;
-font-size:22px; font-weight:700; letter-spacing:2px;
-color:var(–white);
-}
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-tertiary);
+            animation: fadeInUp 0.5s ease;
+        }
+        .empty-state .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            opacity: 0.6;
+        }
+        .empty-state p {
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
 
-.hero-label {
-font-family:‘Rajdhani’, sans-serif;
-font-size:13px; letter-spacing:4px; text-transform:uppercase;
-color:var(–muted); margin-bottom:16px;
-position:relative; z-index:2;
-}
+        /* Detail view */
+        .detail-view {
+            display: none;
+            flex-direction: column;
+            gap: 14px;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .detail-view.active {
+            display: flex;
+        }
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 0;
+        }
+        .btn-back {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+            flex-shrink: 0;
+        }
+        .btn-back:hover {
+            background: var(--surface-hover);
+            border-color: var(--border-light);
+        }
+        .btn-back:active {
+            transform: scale(0.93);
+        }
+        .detail-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .detail-subtitle {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            letter-spacing: 0.02em;
+        }
+        .chart-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 18px 16px 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        .chart-label {
+            font-size: 0.65rem;
+            color: var(--text-tertiary);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        svg.chart-svg {
+            width: 100%;
+            height: 140px;
+        }
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 320px;
+            overflow-y: auto;
+            padding-right: 4px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+        .history-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all var(--transition);
+            position: relative;
+        }
+        .history-item .hi-date {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            min-width: 55px;
+            letter-spacing: 0.01em;
+        }
+        .history-item .hi-series {
+            display: flex;
+            gap: 6px;
+            flex: 1;
+            flex-wrap: wrap;
+        }
+        .hi-series-chip {
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 4px 9px;
+            border-radius: 14px;
+            letter-spacing: -0.01em;
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+            font-family: var(--font-mono);
+        }
+        .hi-s1 {
+            background: rgba(138, 171, 158, 0.12);
+            color: #8aab9e;
+        }
+        .hi-s2 {
+            background: rgba(107, 158, 122, 0.14);
+            color: #6b9e7a;
+        }
+        .hi-s3 {
+            background: rgba(74, 140, 92, 0.16);
+            color: #5b9b6b;
+            font-weight: 700;
+            box-shadow: 0 0 8px rgba(74, 140, 92, 0.1);
+        }
+        .hi-delete {
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 6px;
+            border-radius: 50%;
+            transition: all var(--transition);
+            opacity: 0;
+            flex-shrink: 0;
+        }
+        .history-item:hover .hi-delete {
+            opacity: 1;
+        }
+        .hi-delete:hover {
+            color: var(--danger);
+            background: var(--danger-subtle);
+        }
 
-.hero-title {
-font-family:‘Rajdhani’, sans-serif;
-font-size:clamp(28px, 8vw, 42px);
-font-weight:700; line-height:1.1;
-text-align:center;
-color:var(–white);
-margin-bottom:12px;
-position:relative; z-index:2;
-}
+        /* FAB */
+        .fab {
+            position: fixed;
+            bottom: 28px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: var(--accent-strong);
+            border: none;
+            color: #fff;
+            font-size: 1.6rem;
+            cursor: pointer;
+            box-shadow: 0 8px 28px rgba(91, 155, 107, 0.4);
+            z-index: 20;
+            transition: all var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0;
+            line-height: 1;
+        }
+        .fab:hover {
+            transform: translateX(50%) scale(1.06);
+            box-shadow: 0 12px 36px rgba(91, 155, 107, 0.55);
+        }
+        .fab:active {
+            transform: translateX(50%) scale(0.92);
+            transition: all 0.1s ease;
+            box-shadow: 0 4px 16px rgba(91, 155, 107, 0.3);
+        }
 
-.hero-sub {
-font-size:15px; color:var(–muted);
-text-align:center; max-width:300px;
-line-height:1.6; margin-bottom:40px;
-position:relative; z-index:2;
-}
+        /* Modal overlay */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(8, 10, 13, 0.75);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 30;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            animation: fadeIn 0.25s ease;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .modal-sheet {
+            background: var(--surface-elevated);
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            width: 100%;
+            max-width: 480px;
+            max-height: 85vh;
+            max-height: 85dvh;
+            overflow-y: auto;
+            padding: 20px 18px 30px;
+            animation: slideUp 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+            border: 1px solid var(--border);
+            border-bottom: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        .modal-handle {
+            width: 36px;
+            height: 4px;
+            background: var(--border-light);
+            border-radius: 2px;
+            margin: 0 auto 6px;
+            flex-shrink: 0;
+        }
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            text-align: center;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .form-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .form-label .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .dot-s1 {
+            background: var(--series1);
+        }
+        .dot-s2 {
+            background: var(--series2);
+        }
+        .dot-s3 {
+            background: var(--series3);
+            box-shadow: 0 0 8px rgba(74, 140, 92, 0.5);
+        }
+        .input-row {
+            display: flex;
+            gap: 8px;
+        }
+        .input-field {
+            flex: 1;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            color: var(--text);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            outline: none;
+            transition: all var(--transition);
+            -webkit-appearance: none;
+            text-align: center;
+        }
+        .input-field:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+            background: var(--surface-hover);
+        }
+        .input-field::placeholder {
+            color: var(--text-tertiary);
+            font-weight: 400;
+        }
+        .input-suffix {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            align-self: center;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            min-width: 28px;
+            text-align: center;
+        }
+        .btn-primary {
+            background: var(--accent-strong);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            padding: 13px 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: -0.01em;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font);
+            margin-top: 4px;
+        }
+        .btn-primary:hover {
+            background: #4a8c5c;
+            box-shadow: 0 6px 20px rgba(91, 155, 107, 0.35);
+        }
+        .btn-primary:active {
+            transform: scale(0.96);
+            transition: all 0.1s ease;
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 10px 16px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font);
+            letter-spacing: -0.01em;
+        }
+        .btn-outline:hover {
+            border-color: var(--border-light);
+            color: var(--text);
+        }
+        .exercise-select {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 0.9rem;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b95a3' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+        .exercise-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
 
-/* BIG EMERGENCY BUTTON */
-.btn-emergency {
-position:relative; z-index:2;
-width:min(280px, 85vw);
-padding:22px 32px;
-background:var(–red);
-border:none; border-radius:20px;
-cursor:pointer;
-display:flex; align-items:center; justify-content:center; gap:14px;
-box-shadow: 0 0 0 0 var(–red-glow), 0 8px 32px rgba(232,0,45,0.4);
-animation: btn-breathe 2.5s ease-in-out infinite;
-transition: transform .15s, box-shadow .15s;
-text-decoration:none;
-}
-.btn-emergency:active { transform:scale(0.96); }
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-120px);
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-light);
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            z-index: 50;
+            transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            box-shadow: var(--shadow-lg);
+            white-space: nowrap;
+            color: var(--text);
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast.pr-toast {
+            border-color: var(--warm);
+            box-shadow: 0 8px 28px var(--warm-glow);
+            color: var(--warm);
+        }
 
-@keyframes btn-breathe {
-0%,100% { box-shadow: 0 0 0 0 var(–red-glow), 0 8px 32px rgba(232,0,45,0.4); }
-50%      { box-shadow: 0 0 0 16px transparent, 0 12px 40px rgba(232,0,45,0.6); }
-}
-
-.btn-emergency .btn-icon { font-size:28px; }
-.btn-emergency .btn-text { display:flex; flex-direction:column; align-items:flex-start; }
-.btn-emergency .btn-text strong {
-font-family:‘Rajdhani’, sans-serif;
-font-size:20px; font-weight:700; color:#fff; letter-spacing:1px;
-}
-.btn-emergency .btn-text span { font-size:12px; color:rgba(255,255,255,0.7); }
-
-.scan-notice {
-margin-top:28px;
-display:flex; align-items:center; gap:8px;
-background:rgba(255,255,255,0.04);
-border:1px solid var(–border);
-border-radius:12px;
-padding:12px 18px;
-font-size:12px; color:var(–muted);
-position:relative; z-index:2;
-max-width:300px; text-align:center;
-}
-
-/* ── DATA SCREEN ──────────────────────────────────────── */
-#data-screen {
-display:none;
-min-height:100vh;
-background:var(–bg);
-}
-
-/* Alert banner */
-.alert-banner {
-background:var(–red);
-padding:16px 20px;
-display:flex; align-items:center; gap:12px;
-position:sticky; top:0; z-index:100;
-box-shadow:0 4px 20px rgba(232,0,45,0.5);
-}
-.alert-banner .blink { animation:blink 1s step-end infinite; font-size:20px; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-.alert-banner-text { flex:1; }
-.alert-banner-text strong {
-display:block;
-font-family:‘Rajdhani’, sans-serif;
-font-size:18px; font-weight:700; color:#fff; letter-spacing:1px;
-}
-.alert-banner-text span { font-size:12px; color:rgba(255,255,255,0.75); }
-
-/* Timestamp strip */
-#timestamp-strip {
-background:rgba(232,0,45,0.08);
-border-bottom:1px solid rgba(232,0,45,0.2);
-padding:10px 20px;
-display:flex; flex-wrap:wrap; gap:8px; align-items:center;
-}
-.ts-item {
-display:flex; align-items:center; gap:5px;
-font-size:11px; color:var(–muted);
-background:rgba(255,255,255,0.04);
-border-radius:6px; padding:4px 8px;
-}
-.ts-item strong { color:var(–text); }
-
-/* Instructions card */
-.instructions-card {
-margin:16px;
-background:rgba(2,136,209,0.1);
-border:1px solid rgba(2,136,209,0.3);
-border-radius:16px;
-padding:16px;
-}
-.instructions-card h3 {
-font-family:‘Rajdhani’, sans-serif;
-font-size:14px; letter-spacing:2px; text-transform:uppercase;
-color:var(–blue); margin-bottom:10px;
-display:flex; align-items:center; gap:6px;
-}
-.instructions-card ol {
-padding-left:18px;
-font-size:13px; color:var(–muted); line-height:1.8;
-}
-.instructions-card ol li strong { color:var(–text); }
-
-/* Section labels */
-.section-label {
-font-family:‘Rajdhani’, sans-serif;
-font-size:11px; letter-spacing:3px; text-transform:uppercase;
-color:var(–muted);
-padding:20px 20px 8px;
-display:flex; align-items:center; gap:8px;
-}
-.section-label::after {
-content:’’; flex:1; height:1px; background:var(–border);
-}
-
-/* Info cards */
-.cards-grid {
-padding:0 16px;
-display:grid;
-grid-template-columns:1fr;
-gap:12px;
-}
-
-.info-card {
-background:var(–card);
-border:1px solid var(–border);
-border-radius:16px;
-padding:16px;
-position:relative;
-overflow:hidden;
-}
-.info-card::before {
-content:’’; position:absolute; left:0; top:0; bottom:0;
-width:3px;
-}
-.info-card.critical::before { background:var(–red); }
-.info-card.important::before { background:var(–amber); }
-.info-card.info::before { background:var(–blue); }
-.info-card.safe::before { background:var(–green); }
-
-.card-header {
-display:flex; align-items:center; gap:8px; margin-bottom:12px;
-}
-.card-header .card-icon {
-width:32px; height:32px; border-radius:8px;
-display:grid; place-items:center; font-size:16px;
-flex-shrink:0;
-}
-.critical .card-icon  { background:rgba(232,0,45,0.15); }
-.important .card-icon { background:rgba(255,107,0,0.15); }
-.info .card-icon      { background:rgba(2,136,209,0.15); }
-.safe .card-icon      { background:rgba(0,200,83,0.15); }
-
-.card-header h4 {
-font-family:‘Rajdhani’, sans-serif;
-font-size:13px; letter-spacing:2px; text-transform:uppercase;
-}
-.critical  .card-header h4 { color:var(–red); }
-.important .card-header h4 { color:var(–amber); }
-.info      .card-header h4 { color:var(–blue); }
-.safe      .card-header h4 { color:var(–green); }
-
-/* Blood type special */
-.blood-display {
-display:flex; align-items:center; gap:16px;
-}
-.blood-type-badge {
-width:72px; height:72px; border-radius:50%;
-background:var(–red);
-display:grid; place-items:center;
-font-family:‘Rajdhani’, sans-serif;
-font-size:28px; font-weight:700; color:#fff;
-box-shadow:0 4px 16px rgba(232,0,45,0.4);
-flex-shrink:0;
-}
-.blood-meta { display:flex; flex-direction:column; gap:4px; }
-.blood-meta span { font-size:13px; color:var(–muted); }
-.blood-meta strong { font-size:15px; color:var(–text); }
-
-/* Data rows */
-.data-row {
-display:flex; justify-content:space-between; align-items:flex-start;
-padding:8px 0;
-border-bottom:1px solid var(–border);
-gap:12px;
-}
-.data-row:last-child { border-bottom:none; padding-bottom:0; }
-.data-row .label { font-size:12px; color:var(–muted); flex-shrink:0; }
-.data-row .value { font-size:14px; color:var(–text); text-align:right; font-weight:500; }
-.data-row .value.danger { color:var(–red); font-weight:600; }
-.data-row .value.warning { color:var(–amber); }
-
-/* Contact cards */
-.contact-item {
-display:flex; align-items:center; gap:12px;
-padding:10px 0;
-border-bottom:1px solid var(–border);
-}
-.contact-item:last-child { border-bottom:none; }
-.contact-avatar {
-width:40px; height:40px; border-radius:50%;
-background:rgba(255,255,255,0.06);
-display:grid; place-items:center;
-font-size:18px; flex-shrink:0;
-}
-.contact-info { flex:1; min-width:0; }
-.contact-info strong { display:block; font-size:14px; color:var(–text); }
-.contact-info span { font-size:12px; color:var(–muted); }
-.contact-actions { display:flex; gap:6px; }
-
-.action-btn {
-width:34px; height:34px; border-radius:8px;
-border:1px solid var(–border);
-background:transparent;
-display:grid; place-items:center;
-font-size:15px; cursor:pointer;
-transition:background .15s, border-color .15s;
-text-decoration:none; color:inherit;
-}
-.action-btn:hover { background:rgba(255,255,255,0.06); }
-.action-btn.call  { border-color:rgba(0,200,83,0.4); }
-.action-btn.wa    { border-color:rgba(37,211,102,0.4); }
-.action-btn.sms   { border-color:rgba(2,136,209,0.4); }
-.action-btn.mail  { border-color:rgba(255,107,0,0.4); }
-
-/* WhatsApp broadcast button */
-.wa-broadcast-btn {
-display:flex; align-items:center; justify-content:center; gap:10px;
-width:100%; padding:14px;
-background:rgba(37,211,102,0.1);
-border:1px solid rgba(37,211,102,0.3);
-border-radius:12px;
-cursor:pointer;
-font-size:14px; font-weight:600; color:#25D366;
-transition:background .15s;
-margin-top:12px;
-}
-.wa-broadcast-btn:hover { background:rgba(37,211,102,0.18); }
-
-/* Emergency numbers */
-.emergency-grid {
-padding:0 16px;
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-}
-.emg-btn {
-display:flex; flex-direction:column; align-items:center;
-gap:6px; padding:14px 10px;
-background:var(–card);
-border:1px solid var(–border);
-border-radius:14px;
-text-decoration:none;
-transition:border-color .15s, background .15s;
-}
-.emg-btn:hover { background:rgba(255,255,255,0.04); }
-.emg-btn .emg-icon { font-size:24px; }
-.emg-btn .emg-name {
-font-size:11px; color:var(–muted); text-align:center; font-weight:500;
-}
-.emg-btn .emg-number {
-font-family:‘Rajdhani’, sans-serif;
-font-size:18px; font-weight:700;
-}
-.emg-btn.red    { border-color:rgba(232,0,45,0.3); }
-.emg-btn.red    .emg-number { color:var(–red); }
-.emg-btn.amber  { border-color:rgba(255,107,0,0.3); }
-.emg-btn.amber  .emg-number { color:var(–amber); }
-.emg-btn.blue   { border-color:rgba(2,136,209,0.3); }
-.emg-btn.blue   .emg-number { color:var(–blue); }
-.emg-btn.green  { border-color:rgba(0,200,83,0.3); }
-.emg-btn.green  .emg-number { color:var(–green); }
-
-/* Location card */
-.location-card {
-margin:0 16px;
-background:var(–card);
-border:1px solid var(–border);
-border-radius:16px;
-overflow:hidden;
-}
-.location-map-placeholder {
-height:160px;
-background:linear-gradient(135deg, #0d1a1a 0%, #0a1520 100%);
-display:flex; flex-direction:column; align-items:center; justify-content:center;
-gap:8px; cursor:pointer;
-position:relative; overflow:hidden;
-border-bottom:1px solid var(–border);
-}
-.location-map-placeholder::after {
-content:’’;
-position:absolute; inset:0;
-background: repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(0,200,83,0.04) 20px),
-repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(0,200,83,0.04) 20px);
-}
-.map-pin-icon { font-size:32px; position:relative; z-index:1; }
-.map-open-link {
-font-size:13px; color:var(–blue); text-decoration:none;
-position:relative; z-index:1; font-weight:500;
-}
-.location-details { padding:14px 16px; }
-.location-address { font-size:14px; color:var(–text); font-weight:500; margin-bottom:4px; }
-.location-coords  { font-size:12px; color:var(–muted); font-family:monospace; }
-
-/* Scan log */
-.scan-log {
-margin:0 16px 16px;
-background:var(–card);
-border:1px solid var(–border);
-border-radius:16px;
-padding:16px;
-}
-.scan-log h4 {
-font-family:‘Rajdhani’, sans-serif;
-font-size:12px; letter-spacing:2px; text-transform:uppercase;
-color:var(–muted); margin-bottom:12px;
-}
-.log-entry {
-display:flex; gap:10px; align-items:flex-start;
-padding:8px 0; border-bottom:1px solid var(–border);
-font-size:12px;
-}
-.log-entry:last-child { border-bottom:none; }
-.log-dot { width:8px; height:8px; border-radius:50%; background:var(–green); flex-shrink:0; margin-top:4px; }
-.log-time { color:var(–muted); flex-shrink:0; min-width:80px; }
-.log-msg  { color:var(–text); flex:1; }
-
-/* Footer */
-.app-footer {
-padding:24px 20px;
-text-align:center;
-font-size:11px; color:var(–muted);
-border-top:1px solid var(–border);
-}
-.app-footer a { color:var(–blue); text-decoration:none; }
-
-/* Back btn */
-.back-btn {
-margin:16px 16px 0;
-display:inline-flex; align-items:center; gap:6px;
-background:rgba(255,255,255,0.05);
-border:1px solid var(–border);
-border-radius:8px; padding:8px 14px;
-font-size:13px; color:var(–muted);
-cursor:pointer;
-}
-
-/* Tooltip */
-.copied-toast {
-position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
-background:#25D366; color:#fff;
-padding:10px 20px; border-radius:10px;
-font-size:13px; font-weight:600;
-opacity:0; pointer-events:none;
-transition:opacity .3s;
-z-index:999;
-}
-.copied-toast.show { opacity:1; }
-
-@media (min-width:480px) {
-.cards-grid { grid-template-columns:1fr 1fr; }
-.emergency-grid { grid-template-columns:repeat(3, 1fr); }
-}
-@media (min-width:768px) {
-.cards-grid { grid-template-columns:1fr 1fr 1fr; }
-}
-</style>
-
+        /* Responsive */
+        @media (max-width: 380px) {
+            .container {
+                padding: 12px 10px;
+                gap: 10px;
+            }
+            .exercise-card {
+                padding: 12px 14px;
+                gap: 10px;
+            }
+            .card-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 1.2rem;
+            }
+            .card-weight {
+                font-size: 1.15rem;
+                margin-right: 16px;
+            }
+            .card-trend {
+                right: 32px;
+                font-size: 0.65rem;
+            }
+            .fab {
+                width: 48px;
+                height: 48px;
+                font-size: 1.4rem;
+                bottom: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════
-     PANTALLA 1 — QR LANDING
-══════════════════════════════════════════════ -->
+    <div class="container" id="app-container">
+        <!-- Header -->
+        <header class="header" id="header">
+            <div class="header-brand">
+                <div class="header-icon">🏋️</div>
+                <div>
+                    <div class="header-title">Heavy Duty</div>
+                    <div class="header-subtitle">Mentzer Style</div>
+                </div>
+            </div>
+            <div class="header-date" id="header-date"></div>
+        </header>
 
-<div id="emergency-screen">
-  <div class="pulse-ring"></div>
-  <div class="pulse-ring"></div>
-  <div class="pulse-ring"></div>
+        <!-- Summary chips -->
+        <div class="summary-strip" id="summary-strip">
+            <div class="summary-chip">
+                <span class="chip-dot"></span> Sesiones: <span class="chip-value" id="total-sessions">0</span>
+            </div>
+            <div class="summary-chip pr-chip">
+                <span class="chip-dot"></span> PRs: <span class="chip-value" id="total-prs">0</span>
+            </div>
+            <div class="summary-chip">
+                📅 Última: <span class="chip-value" id="last-session">—</span>
+            </div>
+        </div>
 
-  <div class="brand-badge">
-    <div class="icon-wrap">🏍️</div>
-    <span>RODASEGURO</span>
-  </div>
+        <!-- Main view: Exercise cards -->
+        <div class="exercises-grid" id="exercises-grid">
+            <!-- Dynamically populated -->
+        </div>
 
-  <p class="hero-label">ID de Emergencia</p>
-  <h1 class="hero-title">¿Hay un accidente?<br>Actúa ahora.</h1>
-  <p class="hero-sub">Presiona el botón si encontraste a esta persona en una emergencia. Se mostrarán sus datos médicos y de contacto.</p>
+        <!-- Empty state (hidden when exercises exist) -->
+        <div class="empty-state" id="empty-state">
+            <div class="empty-icon">📋</div>
+            <p>No hay ejercicios aún.<br>Presiona <strong>+</strong> para crear tu primer ejercicio y empezar a registrar tu progreso.</p>
+        </div>
 
-  <button class="btn-emergency" onclick="activateEmergency()">
-    <span class="btn-icon">🚨</span>
-    <span class="btn-text">
-      <strong>ESTO ES UNA EMERGENCIA</strong>
-      <span>Ver datos médicos y contactos</span>
-    </span>
-  </button>
-
-  <div class="scan-notice">
-    🔒 Datos protegidos · Solo visibles en emergencia
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════
-     PANTALLA 2 — DATOS DE EMERGENCIA
-══════════════════════════════════════════════ -->
-
-<div id="data-screen">
-
-  <!-- Banner -->
-
-  <div class="alert-banner">
-    <span class="blink">🚨</span>
-    <div class="alert-banner-text">
-      <strong>EMERGENCIA ACTIVA</strong>
-      <span id="activation-time-banner">Registrando hora y ubicación…</span>
+        <!-- Detail view (hidden by default) -->
+        <div class="detail-view" id="detail-view">
+            <div class="detail-header">
+                <button class="btn-back" id="btn-back" aria-label="Volver">←</button>
+                <div>
+                    <div class="detail-title" id="detail-title"></div>
+                    <div class="detail-subtitle" id="detail-subtitle"></div>
+                </div>
+            </div>
+            <div class="chart-container" id="chart-container">
+                <div class="chart-label">Progreso — Peso en Serie 3 (al fallo)</div>
+                <svg class="chart-svg" id="chart-svg" viewBox="0 0 400 140" preserveAspectRatio="none"></svg>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:0.75rem;font-weight:600;color:var(--text-secondary);">Historial</span>
+                <button class="btn-outline btn-sm" id="btn-add-entry-from-detail" style="font-size:0.7rem;padding:6px 12px;">+ Registrar</button>
+            </div>
+            <div class="history-list" id="history-list"></div>
+            <div style="text-align:center;margin-top:6px;">
+                <button class="btn-outline" id="btn-delete-exercise" style="color:var(--danger);border-color:var(--danger-subtle);font-size:0.7rem;">Eliminar ejercicio</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Timestamp + location strip -->
+    <!-- FAB -->
+    <button class="fab" id="fab" aria-label="Agregar registro">+</button>
 
-  <div id="timestamp-strip">
-    <div class="ts-item">🕐 <strong id="ts-time">--:--</strong></div>
-    <div class="ts-item">📅 <strong id="ts-date">--/--/----</strong></div>
-    <div class="ts-item">📍 <strong id="ts-city">Obteniendo...</strong></div>
-  </div>
-
-  <!-- Instrucciones -->
-
-  <div class="instructions-card">
-    <h3>ℹ️ Instrucciones para quien escanea</h3>
-    <ol>
-      <li><strong>Llama al 911</strong> de inmediato si hay peligro de vida.</li>
-      <li><strong>Lee el tipo de sangre y alergias</strong> — informa a los paramédicos.</li>
-      <li><strong>Contacta a los familiares</strong> usando los botones de llamada o WhatsApp.</li>
-      <li><strong>Comparte la ubicación</strong> con los servicios de emergencia.</li>
-      <li><strong>No muevas a la persona</strong> si hay posible lesión de columna.</li>
-    </ol>
-  </div>
-
-  <!-- ── SECCIÓN 1: DATOS CRÍTICOS ── -->
-
-  <p class="section-label">⚠️ Prioridad crítica</p>
-  <div class="cards-grid">
-
-```
-<!-- Tipo de sangre -->
-<div class="info-card critical">
-  <div class="card-header">
-    <div class="card-icon">🩸</div>
-    <h4>Tipo de Sangre</h4>
-  </div>
-  <div class="blood-display">
-    <!-- ════════════════════════════════
-         👇 EDITAR: tipo de sangre
-    ════════════════════════════════ -->
-    <div class="blood-type-badge" id="blood-badge">O+</div>
-    <div class="blood-meta">
-      <span>Grupo sanguíneo</span>
-      <strong>O Positivo</strong>
-      <span>Donador universal</span>
+    <!-- Modal overlay -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-sheet" id="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-title" id="modal-title">Registrar Entrenamiento</div>
+            <div class="form-group">
+                <label class="form-label">Ejercicio</label>
+                <select class="exercise-select" id="exercise-select">
+                    <option value="">Seleccionar ejercicio...</option>
+                </select>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+                <input class="input-field" id="new-exercise-name" type="text" placeholder="O crear nuevo ejercicio..." style="flex:2;font-family:var(--font);font-weight:500;text-align:left;">
+                <button class="btn-outline" id="btn-create-exercise" style="flex-shrink:0;padding:10px 12px;font-size:0.7rem;">Crear</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><span class="dot dot-s1"></span> Serie 1 — Despertar muscular</label>
+                <div class="input-row">
+                    <input class="input-field" type="number" id="s1-weight" placeholder="Peso (kg)" min="0" step="0.5" inputmode="decimal">
+                    <span class="input-suffix">kg</span>
+                    <input class="input-field" type="number" id="s1-reps" placeholder="Reps" min="0" inputmode="numeric" style="max-width:70px;">
+                    <span class="input-suffix">reps</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><span class="dot dot-s2"></span> Serie 2 — 6-8 repeticiones</label>
+                <div class="input-row">
+                    <input class="input-field" type="number" id="s2-weight" placeholder="Peso (kg)" min="0" step="0.5" inputmode="decimal">
+                    <span class="input-suffix">kg</span>
+                    <input class="input-field" type="number" id="s2-reps" placeholder="Reps" min="0" inputmode="numeric" style="max-width:70px;">
+                    <span class="input-suffix">reps</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><span class="dot dot-s3"></span> Serie 3 — Al fallo (4-6 reps)</label>
+                <div class="input-row">
+                    <input class="input-field" type="number" id="s3-weight" placeholder="Peso (kg)" min="0" step="0.5" inputmode="decimal">
+                    <span class="input-suffix">kg</span>
+                    <input class="input-field" type="number" id="s3-reps" placeholder="Reps" min="0" inputmode="numeric" style="max-width:70px;">
+                    <span class="input-suffix">reps</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">📝 Nota (opcional)</label>
+                <input class="input-field" type="text" id="note" placeholder="Ej: Me sentí fuerte hoy..." style="text-align:left;font-family:var(--font);font-weight:400;">
+            </div>
+            <button class="btn-primary" id="btn-save-entry">Guardar Registro</button>
+        </div>
     </div>
-  </div>
-</div>
 
-<!-- Alergias -->
-<div class="info-card critical">
-  <div class="card-header">
-    <div class="card-icon">⚠️</div>
-    <h4>Alergias</h4>
-  </div>
-  <!-- ════════════════════════════════
-       👇 EDITAR: alergias
-  ════════════════════════════════ -->
-  <div class="data-row">
-    <span class="label">Medicamentos</span>
-    <span class="value danger">Penicilina, Ibuprofeno</span>
-  </div>
-  <div class="data-row">
-    <span class="label">Alimentos</span>
-    <span class="value warning">Mariscos</span>
-  </div>
-  <div class="data-row">
-    <span class="label">Otras</span>
-    <span class="value">Ninguna conocida</span>
-  </div>
-</div>
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
 
-<!-- Condiciones médicas -->
-<div class="info-card important">
-  <div class="card-header">
-    <div class="card-icon">💊</div>
-    <h4>Condiciones Médicas</h4>
-  </div>
-  <!-- ════════════════════════════════
-       👇 EDITAR: condiciones médicas
-  ════════════════════════════════ -->
-  <div class="data-row">
-    <span class="label">Diagnóstico</span>
-    <span class="value warning">Diabetes tipo 2</span>
-  </div>
-  <div class="data-row">
-    <span class="label">Medicación actual</span>
-    <span class="value">Metformina 500mg</span>
-  </div>
-  <div class="data-row">
-    <span class="label">Enfermedades crónicas</span>
-    <span class="value">Hipertensión leve</span>
-  </div>
-</div>
-```
+    <script>
+        (function() {
+            // ──────────────────────────────────────
+            // DATA LAYER
+            // ──────────────────────────────────────
+            const STORAGE_KEY = 'heavy_duty_tracker_data';
+            const DEFAULT_EXERCISES = [
+                'Press de banca',
+                'Sentadilla',
+                'Peso muerto',
+                'Press militar',
+                'Curl de bíceps',
+                'Extensión de tríceps',
+                'Remo con barra',
+                'Press de pierna',
+                'Elevación de pantorrillas',
+                'Jalón al pecho',
+            ];
 
-  </div>
+            let appData = {
+                exercises: {}, // { exerciseName: [ { date, s1w, s1r, s2w, s2r, s3w, s3r, note }, ... ] }
+                exerciseOrder: [], // to preserve order
+            };
 
-  <!-- ── SECCIÓN 2: IDENTIDAD ── -->
+            function loadData() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY);
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        appData.exercises = parsed.exercises || {};
+                        appData.exerciseOrder = parsed.exerciseOrder || Object.keys(appData.exercises);
+                    } else {
+                        // Initialize with defaults
+                        appData.exercises = {};
+                        appData.exerciseOrder = [...DEFAULT_EXERCISES];
+                        DEFAULT_EXERCISES.forEach(name => {
+                            appData.exercises[name] = [];
+                        });
+                        saveData();
+                    }
+                    // Ensure all ordered exercises exist in exercises object
+                    appData.exerciseOrder.forEach(name => {
+                        if (!appData.exercises[name]) appData.exercises[name] = [];
+                    });
+                    // Add any exercises in object not in order
+                    Object.keys(appData.exercises).forEach(name => {
+                        if (!appData.exerciseOrder.includes(name)) {
+                            appData.exerciseOrder.push(name);
+                        }
+                    });
+                } catch (e) {
+                    console.error('Error loading data:', e);
+                    appData.exercises = {};
+                    appData.exerciseOrder = [...DEFAULT_EXERCISES];
+                    DEFAULT_EXERCISES.forEach(name => {
+                        appData.exercises[name] = [];
+                    });
+                    saveData();
+                }
+            }
 
-  <p class="section-label">👤 Datos personales</p>
-  <div class="cards-grid">
+            function saveData() {
+                try {
+                    const toSave = {
+                        exercises: appData.exercises,
+                        exerciseOrder: appData.exerciseOrder,
+                    };
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+                } catch (e) {
+                    console.error('Error saving data:', e);
+                }
+            }
 
-```
-<div class="info-card info" style="grid-column:1/-1">
-  <div class="card-header">
-    <div class="card-icon">🪪</div>
-    <h4>Identificación</h4>
-  </div>
-  <!-- ════════════════════════════════
-       👇 EDITAR: datos personales
-  ════════════════════════════════ -->
-  <div class="data-row">
-    <span class="label">Nombre completo</span>
-    <span class="value">Juan Carlos Rodríguez Pérez</span>
-  </div>
-  <div class="data-row">
-    <span class="label">Fecha de nacimiento</span>
-    <span class="value">15 / Mar / 1990 · 35 años</span>
-  </div>
-  <div class="data-row">
-    <span class="label">CURP</span>
-    <span class="value" style="font-family:monospace;font-size:13px">ROPJ900315HDFLNR09</span>
-  </div>
-  <div class="data-row">
-    <span class="label">Vehículo</span>
-    <span class="value">Moto Honda CB 500 · ROJA · ABC-1234</span>
-  </div>
-  <div class="data-row">
-    <span class="label">Seguro médico</span>
-    <span class="value">IMSS · NSS: 12345678901</span>
-  </div>
-</div>
-```
+            function getLastEntry(exerciseName) {
+                const entries = appData.exercises[exerciseName] || [];
+                return entries.length > 0 ? entries[entries.length - 1] : null;
+            }
 
-  </div>
+            function getHistoricalWeights(exerciseName, limit = 10) {
+                const entries = appData.exercises[exerciseName] || [];
+                return entries.slice(-limit).map(e => e.s3w);
+            }
 
-  <!-- ── SECCIÓN 3: CONTACTOS ── -->
+            function getTrend(exerciseName) {
+                const weights = getHistoricalWeights(exerciseName);
+                if (weights.length < 2) return 'neutral';
+                const last = weights[weights.length - 1];
+                const prev = weights[weights.length - 2];
+                if (last > prev) return 'up';
+                if (last < prev) return 'down';
+                return 'neutral';
+            }
 
-  <p class="section-label">📞 Contactos de emergencia</p>
-  <div class="cards-grid">
-    <div class="info-card safe" style="grid-column:1/-1">
-      <div class="card-header">
-        <div class="card-icon">👨‍👩‍👧</div>
-        <h4>Familiares y contactos</h4>
-      </div>
+            function getPRWeight(exerciseName) {
+                const entries = appData.exercises[exerciseName] || [];
+                if (entries.length === 0) return 0;
+                return Math.max(...entries.map(e => e.s3w));
+            }
 
-```
-  <!-- ════════════════════════════════
-       👇 EDITAR: contactos
-       Duplica el bloque .contact-item
-       para agregar más personas
-  ════════════════════════════════ -->
+            function getTotalSessions() {
+                let total = 0;
+                Object.values(appData.exercises).forEach(entries => total += entries.length);
+                return total;
+            }
 
-  <!-- CONTACTO 1 -->
-  <div class="contact-item">
-    <div class="contact-avatar">👩</div>
-    <div class="contact-info">
-      <strong>María Rodríguez (Mamá)</strong>
-      <span>+52 55 1234 5678</span>
-    </div>
-    <div class="contact-actions">
-      <a class="action-btn call" href="tel:+5255123456789" title="Llamar">📞</a>
-      <a class="action-btn wa" onclick="sendWhatsApp('+5255123456789','María Rodríguez (Mamá)')" href="#" title="WhatsApp">💬</a>
-      <a class="action-btn sms" href="sms:+5255123456789" title="SMS">✉️</a>
-    </div>
-  </div>
+            function getTotalPRs() {
+                let prs = 0;
+                Object.keys(appData.exercises).forEach(name => {
+                    const entries = appData.exercises[name] || [];
+                    if (entries.length >= 2) {
+                        const last = entries[entries.length - 1].s3w;
+                        const prevMax = Math.max(...entries.slice(0, -1).map(e => e.s3w), 0);
+                        if (last > prevMax) prs++;
+                    }
+                });
+                return prs;
+            }
 
-  <!-- CONTACTO 2 -->
-  <div class="contact-item">
-    <div class="contact-avatar">👨</div>
-    <div class="contact-info">
-      <strong>Carlos Rodríguez (Papá)</strong>
-      <span>+52 55 9876 5432</span>
-    </div>
-    <div class="contact-actions">
-      <a class="action-btn call" href="tel:+5255987654321" title="Llamar">📞</a>
-      <a class="action-btn wa" onclick="sendWhatsApp('+5255987654321','Carlos Rodríguez (Papá)')" href="#" title="WhatsApp">💬</a>
-      <a class="action-btn sms" href="sms:+5255987654321" title="SMS">✉️</a>
-    </div>
-  </div>
+            function getLastSessionDate() {
+                let latest = null;
+                Object.values(appData.exercises).forEach(entries => {
+                    entries.forEach(e => {
+                        const d = new Date(e.date);
+                        if (!latest || d > latest) latest = d;
+                    });
+                });
+                return latest;
+            }
 
-  <!-- CONTACTO 3 -->
-  <div class="contact-item">
-    <div class="contact-avatar">👫</div>
-    <div class="contact-info">
-      <strong>Sofía Martínez (Pareja)</strong>
-      <span>+52 55 5555 1234</span>
-    </div>
-    <div class="contact-actions">
-      <a class="action-btn call" href="tel:+5255555512341" title="Llamar">📞</a>
-      <a class="action-btn wa" onclick="sendWhatsApp('+5255555512341','Sofía Martínez (Pareja)')" href="#" title="WhatsApp">💬</a>
-      <a class="action-btn mail" href="mailto:sofia.martinez@email.com" title="Email">📧</a>
-    </div>
-  </div>
+            function formatRelativeDate(dateStr) {
+                const now = new Date();
+                const date = new Date(dateStr);
+                const diffMs = now - date;
+                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                if (diffDays === 0) return 'Hoy';
+                if (diffDays === 1) return 'Ayer';
+                if (diffDays < 7) return `Hace ${diffDays} días`;
+                if (diffDays < 30) return `Hace ${Math.floor(diffDays / 7)} sem.`;
+                return date.toLocaleDateString('es-MX', { month: 'short', day: 'numeric' });
+            }
 
-  <!-- CONTACTO 4 — Doctor -->
-  <div class="contact-item">
-    <div class="contact-avatar">👨‍⚕️</div>
-    <div class="contact-info">
-      <strong>Dr. Luis Hernández (Médico)</strong>
-      <span>+52 55 7777 8888</span>
-    </div>
-    <div class="contact-actions">
-      <a class="action-btn call" href="tel:+5255777788881" title="Llamar">📞</a>
-      <a class="action-btn wa" onclick="sendWhatsApp('+5255777788881','Dr. Luis Hernández')" href="#" title="WhatsApp">💬</a>
-    </div>
-  </div>
+            function formatDateShort(dateStr) {
+                const date = new Date(dateStr);
+                return date.toLocaleDateString('es-MX', { month: 'short', day: 'numeric', year: '2-digit' });
+            }
 
-  <!-- BOTÓN ENVIAR WHATSAPP A TODOS -->
-  <button class="wa-broadcast-btn" onclick="broadcastWhatsApp()">
-    💬 Enviar alerta WhatsApp a todos los contactos
-  </button>
+            // ──────────────────────────────────────
+            // DOM REFERENCES
+            // ──────────────────────────────────────
+            const $exercisesGrid = document.getElementById('exercises-grid');
+            const $emptyState = document.getElementById('empty-state');
+            const $detailView = document.getElementById('detail-view');
+            const $detailTitle = document.getElementById('detail-title');
+            const $detailSubtitle = document.getElementById('detail-subtitle');
+            const $historyList = document.getElementById('history-list');
+            const $chartSvg = document.getElementById('chart-svg');
+            const $chartContainer = document.getElementById('chart-container');
+            const $modalOverlay = document.getElementById('modal-overlay');
+            const $modalTitle = document.getElementById('modal-title');
+            const $exerciseSelect = document.getElementById('exercise-select');
+            const $newExerciseName = document.getElementById('new-exercise-name');
+            const $btnCreateExercise = document.getElementById('btn-create-exercise');
+            const $btnSaveEntry = document.getElementById('btn-save-entry');
+            const $btnBack = document.getElementById('btn-back');
+            const $btnDeleteExercise = document.getElementById('btn-delete-exercise');
+            const $btnAddEntryFromDetail = document.getElementById('btn-add-entry-from-detail');
+            const $fab = document.getElementById('fab');
+            const $toast = document.getElementById('toast');
+            const $headerDate = document.getElementById('header-date');
+            const $totalSessions = document.getElementById('total-sessions');
+            const $totalPRs = document.getElementById('total-prs');
+            const $lastSession = document.getElementById('last-session');
+            const $summaryStrip = document.getElementById('summary-strip');
+            const $header = document.getElementById('header');
 
-</div>
-```
+            let currentDetailExercise = null;
+            let editingEntryIndex = null; // for future edit support
 
-  </div>
+            // ──────────────────────────────────────
+            // RENDER FUNCTIONS
+            // ──────────────────────────────────────
+            function renderAll() {
+                renderSummary();
+                renderExercisesGrid();
+                updateHeaderDate();
+                populateExerciseSelect();
+                if (currentDetailExercise) {
+                    renderDetailView(currentDetailExercise);
+                }
+            }
 
-  <!-- ── SECCIÓN 4: UBICACIÓN ── -->
+            function updateHeaderDate() {
+                const now = new Date();
+                $headerDate.textContent = now.toLocaleDateString('es-MX', {
+                    weekday: 'short',
+                    day: 'numeric',
+                    month: 'short',
+                }).replace(/^\w/, c => c.toUpperCase());
+            }
 
-  <p class="section-label">📍 Ubicación del accidente</p>
+            function renderSummary() {
+                $totalSessions.textContent = getTotalSessions();
+                $totalPRs.textContent = getTotalPRs();
+                const lastDate = getLastSessionDate();
+                $lastSession.textContent = lastDate ? formatRelativeDate(lastDate.toISOString()) : '—';
+            }
 
-  <div class="location-card">
-    <div class="location-map-placeholder" id="map-placeholder" onclick="openMaps()">
-      <span class="map-pin-icon">📍</span>
-      <a class="map-open-link" href="#" onclick="event.stopPropagation();openMaps()">Toca para abrir en Google Maps</a>
-    </div>
-    <div class="location-details">
-      <div class="location-address" id="location-address">Obteniendo dirección exacta…</div>
-      <div class="location-coords" id="location-coords">Lat: — · Lon: —</div>
-    </div>
-  </div>
+            function renderExercisesGrid() {
+                $exercisesGrid.innerHTML = '';
+                const exercises = appData.exerciseOrder.filter(name => appData.exercises[name] !== undefined);
 
-  <!-- ── SECCIÓN 5: EMERGENCIAS CDMX / MÉXICO ── -->
+                if (exercises.length === 0) {
+                    $emptyState.style.display = 'block';
+                    $exercisesGrid.style.display = 'none';
+                } else {
+                    $emptyState.style.display = 'none';
+                    $exercisesGrid.style.display = 'flex';
+                }
 
-  <p class="section-label">🚨 Números de emergencia</p>
-  <div class="emergency-grid">
+                exercises.forEach((name, index) => {
+                    const lastEntry = getLastEntry(name);
+                    const trend = getTrend(name);
+                    const weights = getHistoricalWeights(name, 8);
+                    const prWeight = getPRWeight(name);
+                    const lastWeight = lastEntry ? lastEntry.s3w : null;
+                    const isPR = lastEntry && lastWeight >= prWeight && lastWeight > 0 && weights.filter(w => w >=
+                        lastWeight).length <= 1;
 
-```
-<a class="emg-btn red" href="tel:911">
-  <span class="emg-icon">🚑</span>
-  <span class="emg-name">Emergencias Nacional</span>
-  <span class="emg-number">911</span>
-</a>
+                    const card = document.createElement('div');
+                    card.className = 'exercise-card';
+                    card.style.animationDelay = `${index * 0.04}s`;
+                    card.addEventListener('click', () => openDetailView(name));
 
-<a class="emg-btn red" href="tel:066">
-  <span class="emg-icon">🚓</span>
-  <span class="emg-name">Policía CDMX</span>
-  <span class="emg-number">066</span>
-</a>
+                    const icons = {
+                        'Press de banca': '🏋️',
+                        'Sentadilla': '🦵',
+                        'Peso muerto': '🔗',
+                        'Press militar': '💪',
+                        'Curl de bíceps': '💪',
+                        'Extensión de tríceps': '🔧',
+                        'Remo con barra': '🚣',
+                        'Press de pierna': '🦿',
+                        'Elevación de pantorrillas': '🦶',
+                        'Jalón al pecho': '🔽',
+                    };
+                    const icon = icons[name] || '🏋️';
 
-<a class="emg-btn amber" href="tel:080">
-  <span class="emg-icon">🚒</span>
-  <span class="emg-name">Bomberos CDMX</span>
-  <span class="emg-number">080</span>
-</a>
+                    let sparklineHTML = '';
+                    if (weights.length > 0) {
+                        const maxW = Math.max(...weights, 1);
+                        sparklineHTML = '<div class="sparkline-row">';
+                        weights.forEach((w, i) => {
+                            const heightPercent = Math.max(15, (w / maxW) * 100);
+                            let barClass = 'sparkline-bar';
+                            if (i === weights.length - 1) barClass += ' latest';
+                            if (w >= prWeight && w > 0 && weights.filter((ww, ii) => ww >= w && ii < i)
+                                .length === 0 && i === weights.length - 1) barClass += ' pr';
+                            sparklineHTML +=
+                                `<div class="${barClass}" style="height:${heightPercent}%;flex:1;"></div>`;
+                        });
+                        sparklineHTML += '</div>';
+                    }
 
-<a class="emg-btn blue" href="tel:55-5684-1590">
-  <span class="emg-icon">🏥</span>
-  <span class="emg-name">Cruz Roja CDMX</span>
-  <span class="emg-number">5684-1590</span>
-</a>
+                    let trendHTML = '';
+                    if (trend === 'up') trendHTML =
+                        '<span class="card-trend up">▲</span>';
+                    else if (trend === 'down') trendHTML =
+                        '<span class="card-trend down">▼</span>';
+                    else if (weights.length >= 2) trendHTML =
+                        '<span class="card-trend neutral">→</span>';
 
-<a class="emg-btn green" href="tel:800-290-0024">
-  <span class="emg-icon">🚁</span>
-  <span class="emg-name">ERUM (Urgencias)</span>
-  <span class="emg-number">800-290-0024</span>
-</a>
+                    card.innerHTML = `
+                <div class="card-icon">${icon}</div>
+                <div class="card-info">
+                  <div class="card-name">${name}</div>
+                  <div class="card-meta">${lastEntry ? formatRelativeDate(lastEntry.date) : 'Sin registros'}</div>
+                  ${sparklineHTML}
+                </div>
+                <div class="card-weight">${lastWeight !== null ? lastWeight : '—'}<span>${lastWeight !== null ? ' kg' : ''}</span></div>
+                ${trendHTML}
+              `;
+                    $exercisesGrid.appendChild(card);
+                });
+            }
 
-<a class="emg-btn amber" href="tel:55-5658-1111">
-  <span class="emg-icon">⚡</span>
-  <span class="emg-name">IMSS Urgencias</span>
-  <span class="emg-number">5658-1111</span>
-</a>
+            function openDetailView(exerciseName) {
+                currentDetailExercise = exerciseName;
+                renderDetailView(exerciseName);
+                $detailView.classList.add('active');
+                $exercisesGrid.style.display = 'none';
+                $emptyState.style.display = 'none';
+                $summaryStrip.style.opacity = '0.5';
+                document.querySelector('.header-brand').style.opacity = '0.7';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
 
-<a class="emg-btn blue" href="tel:800-700-3000">
-  <span class="emg-icon">🔵</span>
-  <span class="emg-name">ISSSTE Urgencias</span>
-  <span class="emg-number">800-700-3000</span>
-</a>
+            function closeDetailView() {
+                currentDetailExercise = null;
+                $detailView.classList.remove('active');
+                $exercisesGrid.style.display = 'flex';
+                $summaryStrip.style.opacity = '1';
+                document.querySelector('.header-brand').style.opacity = '1';
+                renderExercisesGrid();
+                renderSummary();
+                updateEmptyState();
+            }
 
-<a class="emg-btn red" href="tel:55-5514-4222">
-  <span class="emg-icon">🛡️</span>
-  <span class="emg-name">Ángeles Verdes</span>
-  <span class="emg-number">5514-4222</span>
-</a>
+            function updateEmptyState() {
+                const exercises = appData.exerciseOrder.filter(name => appData.exercises[name] !== undefined);
+                if (exercises.length === 0) {
+                    $emptyState.style.display = 'block';
+                    $exercisesGrid.style.display = 'none';
+                } else {
+                    $emptyState.style.display = 'none';
+                    $exercisesGrid.style.display = 'flex';
+                }
+            }
 
-<a class="emg-btn amber" href="tel:072">
-  <span class="emg-icon">📞</span>
-  <span class="emg-name">Locatel CDMX</span>
-  <span class="emg-number">072</span>
-</a>
-```
+            function renderDetailView(exerciseName) {
+                $detailTitle.textContent = exerciseName;
+                const entries = appData.exercises[exerciseName] || [];
+                const prWeight = getPRWeight(exerciseName);
+                $detailSubtitle.textContent =
+                    `${entries.length} registro${entries.length !== 1 ? 's' : ''} · PR: ${prWeight > 0 ? prWeight + ' kg' : '—'}`;
 
-  </div>
+                // Chart
+                renderChart(exerciseName);
 
-  <!-- ── REGISTRO DE ESCANEOS ── -->
+                // History list
+                $historyList.innerHTML = '';
+                if (entries.length === 0) {
+                    $historyList.innerHTML =
+                        '<div style="text-align:center;color:var(--text-tertiary);padding:20px;font-size:0.8rem;">Sin registros aún. ¡Agrega tu primer entrenamiento!</div>';
+                } else {
+                    const reversed = [...entries].reverse();
+                    reversed.forEach((entry, i) => {
+                        const item = document.createElement('div');
+                        item.className = 'history-item';
+                        item.innerHTML = `
+                  <span class="hi-date">${formatDateShort(entry.date)}</span>
+                  <div class="hi-series">
+                    <span class="hi-series-chip hi-s1">S1: ${entry.s1w}kg × ${entry.s1r}</span>
+                    <span class="hi-series-chip hi-s2">S2: ${entry.s2w}kg × ${entry.s2r}</span>
+                    <span class="hi-series-chip hi-s3">S3: ${entry.s3w}kg × ${entry.s3r}</span>
+                  </div>
+                  ${entry.note ? `<span style="font-size:0.65rem;color:var(--text-tertiary);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${entry.note}">📝</span>` : ''}
+                  <button class="hi-delete" data-index="${entries.length - 1 - i}" title="Eliminar">🗑️</button>
+                `;
+                        $historyList.appendChild(item);
+                    });
 
-  <p class="section-label">🗂️ Registro de activaciones</p>
-  <div class="scan-log">
-    <h4>Historial de escaneos</h4>
-    <div id="scan-log-list">
-      <!-- Populated by JS -->
-    </div>
-  </div>
+                    // Add delete listeners
+                    $historyList.querySelectorAll('.hi-delete').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            const idx = parseInt(btn.getAttribute('data-index'));
+                            deleteEntry(exerciseName, idx);
+                        });
+                    });
+                }
+            }
 
-  <div class="app-footer">
-    <strong>RodaSeguro</strong> · ID de Emergencia<br>
-    Genera tu propio código en <a href="https://github.com" target="_blank">GitHub Pages</a><br><br>
-    <small>Los datos son solo de lectura. Nadie puede editarlos desde este dispositivo.</small>
-  </div>
+            function renderChart(exerciseName) {
+                const entries = appData.exercises[exerciseName] || [];
+                const weights = entries.map(e => e.s3w);
+                if (weights.length === 0) {
+                    $chartSvg.innerHTML =
+                        '<text x="200" y="70" text-anchor="middle" fill="#5c6673" font-size="12" font-family="Inter, sans-serif">Sin datos</text>';
+                    return;
+                }
+                if (weights.length === 1) {
+                    $chartSvg.innerHTML = `
+                <circle cx="200" cy="70" r="5" fill="#7aaa8a" />
+                <text x="200" y="100" text-anchor="middle" fill="#8b95a3" font-size="10" font-family="Inter, sans-serif">${weights[0]} kg</text>
+              `;
+                    return;
+                }
 
-</div><!-- /data-screen -->
+                const maxW = Math.max(...weights, 1);
+                const minW = Math.min(...weights, 0);
+                const range = maxW - minW || 1;
+                const paddingX = 20;
+                const paddingY = 20;
+                const chartW = 400;
+                const chartH = 140;
+                const plotW = chartW - paddingX * 2;
+                const plotH = chartH - paddingY * 2;
 
-<div class="copied-toast" id="toast">✅ Alerta enviada por WhatsApp</div>
+                const points = weights.map((w, i) => {
+                    const x = paddingX + (i / (weights.length - 1)) * plotW;
+                    const y = chartH - paddingY - ((w - minW) / range) * plotH;
+                    return { x, y, w };
+                });
 
-<script>
-// ══════════════════════════════════════════════
-// ════  DATOS DE LA PERSONA — EDITAR AQUÍ  ════
-// ══════════════════════════════════════════════
-const PERSON = {
-  name: "Juan Carlos Rodríguez Pérez",
-  bloodType: "O+",
-  vehicle: "Moto Honda CB 500 ROJA · ABC-1234",
-  // Mensaje automático de WhatsApp
-  emergencyMessage: (loc) =>
-    `🚨 *EMERGENCIA* 🚨\n\nAlguien escaneó la ID de emergencia de *Juan Carlos Rodríguez Pérez*.\n\n📍 Ubicación: ${loc}\n\n⏰ Hora: ${new Date().toLocaleTimeString('es-MX')}\n\nPor favor comunícate de inmediato o llama al 911.`
-};
-// ══════════════════════════════════════════════
+                // Build SVG
+                let svgContent = '';
 
-let currentLocation = { lat: null, lng: null, address: "Obteniendo ubicación…" };
-let scanLog = [];
+                // Grid lines
+                for (let i = 0; i <= 3; i++) {
+                    const y = paddingY + (i / 3) * plotH;
+                    svgContent +=
+                        `<line x1="${paddingX}" y1="${y}" x2="${chartW - paddingX}" y2="${y}" stroke="#252b33" stroke-width="0.5" stroke-dasharray="4,4"/>`;
+                }
 
-// ── Activar emergencia ────────────────────────
-function activateEmergency() {
-  document.getElementById('emergency-screen').style.display = 'none';
-  document.getElementById('data-screen').style.display = 'block';
+                // Area fill
+                let areaPath = `M ${points[0].x} ${chartH - paddingY} `;
+                points.forEach(p => {
+                    areaPath += `L ${p.x} ${p.y} `;
+                });
+                areaPath += `L ${points[points.length - 1].x} ${chartH - paddingY} Z`;
+                svgContent +=
+                    `<path d="${areaPath}" fill="url(#areaGrad)" opacity="0.3" />`;
 
-  const now = new Date();
-  document.getElementById('ts-time').textContent = now.toLocaleTimeString('es-MX');
-  document.getElementById('ts-date').textContent = now.toLocaleDateString('es-MX', {day:'2-digit',month:'short',year:'numeric'});
-  document.getElementById('activation-time-banner').textContent =
-    `Activado: ${now.toLocaleString('es-MX')}`;
+                // Gradient def
+                svgContent += `
+              <defs>
+                <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#7aaa8a" stop-opacity="0.5"/>
+                  <stop offset="100%" stop-color="#7aaa8a" stop-opacity="0"/>
+                </linearGradient>
+              </defs>`;
 
-  // Registrar en log
-  const entry = { time: now.toLocaleTimeString('es-MX'), date: now.toLocaleDateString('es-MX'), msg: 'Emergencia activada · Obteniendo ubicación GPS…' };
-  scanLog.push(entry);
-  renderLog();
+                // Line
+                let linePath = `M ${points[0].x} ${points[0].y} `;
+                for (let i = 1; i < points.length; i++) {
+                    linePath += `L ${points[i].x} ${points[i].y} `;
+                }
+                svgContent +=
+                    `<path d="${linePath}" fill="none" stroke="#7aaa8a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
 
-  // Obtener geolocalización
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(handlePosition, handleGeoError, {
-      enableHighAccuracy: true, timeout: 10000
-    });
-  } else {
-    updateLocationUI(null, null, "Geolocalización no disponible en este dispositivo");
-  }
+                // Dots
+                points.forEach((p, i) => {
+                    const isLast = i === points.length - 1;
+                    const isPR = p.w >= Math.max(...weights) && p.w > 0;
+                    const r = isLast ? 5 : 3;
+                    const color = isPR && isLast ? '#c4a87c' : '#7aaa8a';
+                    const glow = isPR && isLast ? 'filter: drop-shadow(0 0 6px rgba(196,168,124,0.6))' : '';
+                    svgContent +=
+                        `<circle cx="${p.x}" cy="${p.y}" r="${r}" fill="${color}" style="${glow}"/>`;
+                    if (isLast) {
+                        svgContent +=
+                            `<text x="${p.x}" y="${p.y - 10}" text-anchor="middle" fill="#e8ecf0" font-size="11" font-weight="700" font-family="Inter, sans-serif">${p.w} kg</text>`;
+                    }
+                });
 
-  // Guardar en localStorage
-  saveScanRecord(now);
-}
+                $chartSvg.innerHTML = svgContent;
+            }
 
-// ── Manejar posición ──────────────────────────
-function handlePosition(pos) {
-  const { latitude: lat, longitude: lng } = pos.coords;
-  currentLocation.lat = lat;
-  currentLocation.lng = lng;
+            function deleteEntry(exerciseName, index) {
+                if (confirm('¿Eliminar este registro?')) {
+                    appData.exercises[exerciseName].splice(index, 1);
+                    saveData();
+                    renderDetailView(exerciseName);
+                    renderAll();
+                    if (appData.exercises[exerciseName].length === 0 && currentDetailExercise === exerciseName) {
+                        // Stay in detail view but show empty
+                    }
+                }
+            }
 
-  document.getElementById('location-coords').textContent =
-    `Lat: ${lat.toFixed(6)} · Lon: ${lng.toFixed(6)}`;
-  document.getElementById('ts-city').textContent = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+            function deleteExercise(exerciseName) {
+                if (confirm(`¿Eliminar "${exerciseName}" y todos sus registros? Esta acción no se puede deshacer.`)) {
+                    delete appData.exercises[exerciseName];
+                    appData.exerciseOrder = appData.exerciseOrder.filter(n => n !== exerciseName);
+                    saveData();
+                    closeDetailView();
+                    renderAll();
+                    updateEmptyState();
+                    showToast('Ejercicio eliminado');
+                }
+            }
 
-  // Reverse geocode via nominatim (gratuito, sin API key)
-  fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`)
-    .then(r => r.json())
-    .then(data => {
-      const a = data.address;
-      const parts = [
-        a.road || a.pedestrian || a.footway,
-        a.house_number,
-        a.suburb || a.neighbourhood || a.village,
-        a.city || a.town || a.county,
-        a.state
-      ].filter(Boolean);
-      const addr = parts.join(', ');
-      currentLocation.address = addr || data.display_name;
-      updateLocationUI(lat, lng, currentLocation.address);
+            function populateExerciseSelect() {
+                $exerciseSelect.innerHTML = '<option value="">Seleccionar ejercicio...</option>';
+                appData.exerciseOrder.forEach(name => {
+                    if (appData.exercises[name] !== undefined) {
+                        const opt = document.createElement('option');
+                        opt.value = name;
+                        opt.textContent = name;
+                        $exerciseSelect.appendChild(opt);
+                    }
+                });
+            }
 
-      // Actualizar log
-      const now = new Date();
-      scanLog.push({ time: now.toLocaleTimeString('es-MX'), date: now.toLocaleDateString('es-MX'), msg: `📍 Ubicación: ${currentLocation.address}` });
-      renderLog();
-      saveScanRecord(now);
+            // ──────────────────────────────────────
+            // MODAL
+            // ──────────────────────────────────────
+            function openModal(preselectExercise = null) {
+                populateExerciseSelect();
+                if (preselectExercise && appData.exercises[preselectExercise] !== undefined) {
+                    $exerciseSelect.value = preselectExercise;
+                } else {
+                    $exerciseSelect.value = '';
+                }
+                $newExerciseName.value = '';
+                document.getElementById('s1-weight').value = '';
+                document.getElementById('s1-reps').value = '';
+                document.getElementById('s2-weight').value = '';
+                document.getElementById('s2-reps').value = '';
+                document.getElementById('s3-weight').value = '';
+                document.getElementById('s3-reps').value = '';
+                document.getElementById('note').value = '';
+                $modalTitle.textContent = 'Registrar Entrenamiento';
+                editingEntryIndex = null;
+                $modalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => {
+                    document.getElementById('s1-weight').focus();
+                }, 400);
+            }
 
-      document.getElementById('ts-city').textContent =
-        (a.suburb || a.neighbourhood || a.city || a.town || '').substring(0, 28);
-    })
-    .catch(() => {
-      updateLocationUI(lat, lng, `GPS: ${lat.toFixed(5)}, ${lng.toFixed(5)}`);
-    });
-}
+            function closeModal() {
+                $modalOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+                editingEntryIndex = null;
+            }
 
-function handleGeoError(err) {
-  updateLocationUI(null, null, "No se pudo obtener la ubicación · Permite el acceso GPS");
-  document.getElementById('ts-city').textContent = 'Sin GPS';
-}
+            function createExercise(name) {
+                const trimmed = name.trim();
+                if (!trimmed) return null;
+                if (appData.exercises[trimmed]) return trimmed;
+                appData.exercises[trimmed] = [];
+                if (!appData.exerciseOrder.includes(trimmed)) {
+                    appData.exerciseOrder.unshift(trimmed);
+                }
+                saveData();
+                return trimmed;
+            }
 
-function updateLocationUI(lat, lng, address) {
-  document.getElementById('location-address').textContent = address;
-  if (lat && lng) {
-    document.getElementById('map-placeholder').style.background =
-      `url(https://staticmap.openstreetmap.de/staticmap.php?center=${lat},${lng}&zoom=16&size=600x200&markers=${lat},${lng},red-pushpin) center/cover no-repeat, linear-gradient(135deg,#0d1a1a,#0a1520)`;
-  }
-}
+            function saveEntry() {
+                const selectedExercise = $exerciseSelect.value;
+                let exerciseName = selectedExercise;
+                const newName = $newExerciseName.value.trim();
 
-function openMaps() {
-  if (currentLocation.lat) {
-    window.open(`https://www.google.com/maps?q=${currentLocation.lat},${currentLocation.lng}`, '_blank');
-  } else {
-    alert('Ubicación no disponible todavía. Permite acceso al GPS.');
-  }
-}
+                if (!exerciseName && newName) {
+                    exerciseName = createExercise(newName);
+                }
+                if (!exerciseName) {
+                    showToast('Selecciona o crea un ejercicio');
+                    return;
+                }
 
-// ── WhatsApp ──────────────────────────────────
-function sendWhatsApp(phone, name) {
-  const loc = currentLocation.lat
-    ? `https://www.google.com/maps?q=${currentLocation.lat},${currentLocation.lng}`
-    : currentLocation.address;
-  const msg = encodeURIComponent(PERSON.emergencyMessage(loc));
-  const cleaned = phone.replace(/\D/g, '');
-  window.open(`https://wa.me/${cleaned}?text=${msg}`, '_blank');
-  showToast(`💬 Abriendo WhatsApp para ${name}`);
-}
+                const s1w = parseFloat(document.getElementById('s1-weight').value) || 0;
+                const s1r = parseInt(document.getElementById('s1-reps').value) || 0;
+                const s2w = parseFloat(document.getElementById('s2-weight').value) || 0;
+                const s2r = parseInt(document.getElementById('s2-reps').value) || 0;
+                const s3w = parseFloat(document.getElementById('s3-weight').value) || 0;
+                const s3r = parseInt(document.getElementById('s3-reps').value) || 0;
+                const note = document.getElementById('note').value.trim();
 
-function broadcastWhatsApp() {
-  const contacts = [
-    '+5255123456789',
-    '+5255987654321',
-    '+5255555512341',
-    '+5255777788881'
-  ];
-  const loc = currentLocation.lat
-    ? `https://www.google.com/maps?q=${currentLocation.lat},${currentLocation.lng}`
-    : currentLocation.address;
-  const msg = encodeURIComponent(PERSON.emergencyMessage(loc));
-  let i = 0;
-  function next() {
-    if (i < contacts.length) {
-      const c = contacts[i].replace(/\D/g,'');
-      window.open(`https://wa.me/${c}?text=${msg}`, '_blank');
-      i++;
-      setTimeout(next, 800);
-    }
-  }
-  next();
-  showToast('💬 Enviando alerta a todos los contactos…');
-}
+                if (s3w <= 0 || s3r <= 0) {
+                    showToast('La Serie 3 (al fallo) es obligatoria');
+                    return;
+                }
 
-// ── Log ───────────────────────────────────────
-function renderLog() {
-  const el = document.getElementById('scan-log-list');
-  const stored = loadStoredScans();
-  const all = [...stored, ...scanLog].slice(-10).reverse();
-  el.innerHTML = all.map(e =>
-    `<div class="log-entry">
-      <div class="log-dot"></div>
-      <div class="log-time">${e.time}</div>
-      <div class="log-msg">${e.msg}</div>
-    </div>`
-  ).join('') || '<div class="log-entry"><div class="log-msg" style="color:var(--muted)">Sin registros previos</div></div>';
-}
+                const entry = {
+                    date: new Date().toISOString(),
+                    s1w,
+                    s1r,
+                    s2w,
+                    s2r,
+                    s3w,
+                    s3r,
+                    note,
+                };
 
-function saveScanRecord(now) {
-  try {
-    const records = JSON.parse(localStorage.getItem('rs_scan_log') || '[]');
-    records.push({
-      time: now.toLocaleTimeString('es-MX'),
-      date: now.toLocaleDateString('es-MX'),
-      msg: `Activación registrada · ${currentLocation.address || 'ubicación pendiente'}`
-    });
-    if (records.length > 20) records.shift();
-    localStorage.setItem('rs_scan_log', JSON.stringify(records));
-  } catch(e) {}
-}
+                // Check if PR
+                const prevPR = getPRWeight(exerciseName);
+                const isNewPR = s3w > prevPR && prevPR > 0;
 
-function loadStoredScans() {
-  try { return JSON.parse(localStorage.getItem('rs_scan_log') || '[]'); }
-  catch(e) { return []; }
-}
+                appData.exercises[exerciseName].push(entry);
+                saveData();
+                closeModal();
+                renderAll();
+                if (currentDetailExercise === exerciseName) {
+                    renderDetailView(exerciseName);
+                }
+                updateEmptyState();
 
-// ── Toast ─────────────────────────────────────
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-</script>
+                if (isNewPR) {
+                    showToast(`🏆 ¡Nuevo PR! ${s3w} kg en ${exerciseName}`, true);
+                } else {
+                    showToast('Registro guardado ✓');
+                }
+            }
 
+            // ──────────────────────────────────────
+            // TOAST
+            // ──────────────────────────────────────
+            let toastTimeout;
+
+            function showToast(message, isPR = false) {
+                clearTimeout(toastTimeout);
+                $toast.textContent = message;
+                $toast.className = 'toast';
+                if (isPR) $toast.classList.add('pr-toast');
+                requestAnimationFrame(() => {
+                    $toast.classList.add('show');
+                });
+                toastTimeout = setTimeout(() => {
+                    $toast.classList.remove('show');
+                }, 2200);
+            }
+
+            // ──────────────────────────────────────
+            // EVENT LISTENERS
+            // ──────────────────────────────────────
+            $fab.addEventListener('click', () => openModal(currentDetailExercise));
+            $btnAddEntryFromDetail.addEventListener('click', () => openModal(currentDetailExercise));
+            $btnBack.addEventListener('click', closeDetailView);
+            $btnDeleteExercise.addEventListener('click', () => {
+                if (currentDetailExercise) deleteExercise(currentDetailExercise);
+            });
+            $btnSaveEntry.addEventListener('click', saveEntry);
+            $btnCreateExercise.addEventListener('click', () => {
+                const name = $newExerciseName.value.trim();
+                if (name) {
+                    const created = createExercise(name);
+                    if (created) {
+                        populateExerciseSelect();
+                        $exerciseSelect.value = created;
+                        $newExerciseName.value = '';
+                        showToast(`Ejercicio "${created}" creado`);
+                    }
+                }
+            });
+
+            // Close modal on overlay click
+            $modalOverlay.addEventListener('click', (e) => {
+                if (e.target === $modalOverlay) {
+                    closeModal();
+                }
+            });
+
+            // Close modal on Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if ($modalOverlay.classList.contains('active')) {
+                        closeModal();
+                    } else if (currentDetailExercise) {
+                        closeDetailView();
+                    }
+                }
+                // Ctrl+Enter to save in modal
+                if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && $modalOverlay.classList.contains(
+                        'active')) {
+                    saveEntry();
+                }
+            });
+
+            // Header scroll effect
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    $header.classList.add('scrolled');
+                } else {
+                    $header.classList.remove('scrolled');
+                }
+            });
+
+            // Swipe right to go back on detail view (basic touch support)
+            let touchStartX = 0;
+            document.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+            }, { passive: true });
+            document.addEventListener('touchend', (e) => {
+                if (!currentDetailExercise) return;
+                const touchEndX = e.changedTouches[0].clientX;
+                const diff = touchEndX - touchStartX;
+                if (diff > 80 && !$modalOverlay.classList.contains('active')) {
+                    closeDetailView();
+                }
+            });
+
+            // ──────────────────────────────────────
+            // INIT
+            // ──────────────────────────────────────
+            function init() {
+                loadData();
+                updateHeaderDate();
+                renderAll();
+                updateEmptyState();
+                populateExerciseSelect();
+            }
+
+            init();
+            console.log('🏋️ Heavy Duty Tracker — Mentzer Style — Listo');
+        })();
+    </script>
 </body>
 </html>
